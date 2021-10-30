@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+extends Control
+
+signal on_option_select
+
+export(Color) var defaultColor = Color(0, 0, 0) setget set_default_color, get_default_color
+export(Color) var selectionColor = Color(1, 1, 1) setget set_selection_color, get_selection_color
+export(Array) var options = Array() setget set_options, get_options
+
+var _currentSelection: int = 0
+
+func _ready():
+	_apply_options()
+
+func _input(event):
+	if event.is_action_pressed(\"ui_down\"):
+		_down()
+	elif event.is_action_pressed(\"ui_up\"):
+		_up()
+	elif event.is_action_pressed(\"ui_accept\"):
+		_select()
+
+func _down():
+	self._currentSelection = self._currentSelection + 1
+	if self._currentSelection >= self.options.size():
+		self._currentSelection = 0
+	
+	_apply_colors()
+
+func _up():
+	self._currentSelection = self._currentSelection - 1
+	if self._currentSelection < 0:
+		self._currentSelection = self.options.size() - 1
+	
+	_apply_colors()
+
+func _select():
+	emit_signal(\"on_option_select\", self._currentSelection)
+
+func set_default_color(_color):
+	defaultColor = _color
+	
+	_apply_colors()
+
+func get_default_color():
+	return defaultColor
+
+func set_selection_color(_color):
+	selectionColor = _color
+	
+	_apply_colors()
+
+func get_selection_color():
+	return selectionColor
+
+func change_option(_index, _option):
+	var option = $Labels.get_child(_index)
+	if option != null:
+		option.text = _option
+
+func set_options(_options):
+	options = _options
+	_apply_options()
+
+func get_options():
+	return options
+
+func _apply_options():
+	for child in $Labels.get_children():
+		$Labels.remove_child(child)
+		
+	for option in self.options:
+		_create_option(option)
+
+func _create_option(option):
+	var label = Label.new()
+	label.text = option
+	label.align = Label.ALIGN_CENTER
+	$Labels.add_child(label)
+	
+	_apply_colors()
+
+func _apply_colors():
+	for child in $Labels.get_children():
+		child.add_color_override(\"font_color\", self.defaultColor)
+	
+	if $Labels.get_child_count() > 0:
+		$Labels.get_child(self._currentSelection).add_color_override(\"font_color\", self.selectionColor)
+
+func _on_change_selection(_index):
+	_apply_colors()
+"
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Labels" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

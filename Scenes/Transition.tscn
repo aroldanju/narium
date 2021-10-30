@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+signal on_fade_in_finish
+signal on_fade_out_finish
+
+func _ready():
+	pass
+	
+func fade_in(_color = Color(0, 0, 0)):
+	visible = true
+	$Tween.interpolate_property($ColorRect, \"color:a\", 1, 0, 1.0, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+	$Tween.connect(\"tween_completed\", self, \"_fade_in_completed\")
+
+func fade_out(_color = Color(0, 0, 0)):
+	visible = true
+	$Tween.interpolate_property($ColorRect, \"color:a\", 0, 1, 1.0, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+	$Tween.connect(\"tween_completed\", self, \"_fade_out_completed\")
+
+func _fade_in_completed(_key, _val):
+	visible = false
+	emit_signal(\"on_fade_in_finish\")
+
+func _fade_out_completed(_key, _val):
+	emit_signal(\"on_fade_out_finish\")
+
+"
+
+[node name="Transition" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]
