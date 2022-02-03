@@ -10,14 +10,12 @@ script/source = "extends Node2D
 
 onready var transition := $CanvasLayer/Control/Transition
 onready var player := $Player
-onready var playerAnimation := $Player/Sprite/AnimationPlayer
 onready var labelLevel := $CanvasLayer/Control/LabelLevel
 onready var labelLevelAnimation := $CanvasLayer/Control/LabelLevel/AnimationPlayer
-onready var visibilityNotifier := $VisibilityNotifier2D
 
 func _ready():
+	self.player.position = Vector2(72, 134)
 	self.transition.fade_in()
-	self.playerAnimation.play(\"default\")
 
 func _on_Transition_on_fade_out_finish():
 	pass
@@ -62,6 +60,7 @@ position = Vector2( 240, 135 )
 texture = ExtResource( 2 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 96, 135 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

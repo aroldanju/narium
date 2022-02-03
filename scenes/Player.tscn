@@ -5,14 +5,17 @@
 [sub_resource type="GDScript" id=4]
 script/source = "extends KinematicBody2D
 
-var Bullet = preload(\"res://scenes/Bullet.tscn\")
+var RielgunBullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
-export(float) var speed = 300.0
+onready var animation := $Sprite/AnimationPlayer
+
+export(float) var speed = 200.0
 
 var _velocity = Vector2()
+var _lastShot = 0
 
 func _ready():
-	pass # Replace with function body.
+	self.animation.play(\"default\")
 
 func _read_input():
 	self._velocity = Vector2()
@@ -25,16 +28,19 @@ func _read_input():
 		self._velocity.y += -1
 	if Input.is_action_pressed(\"down\"):
 		self._velocity.y += 1
-	if Input.is_action_just_pressed(\"fire\"):
-		var bullet = Bullet.instance()
-		bullet.create(self)
-		get_parent().add_child(bullet)
-
-	self._velocity = self._velocity.normalized() * self.speed
+	if Input.is_action_pressed(\"fire\"):
+		var bullet = RielgunBullet.instance()
+		if bullet.can_fire(self._lastShot):
+			bullet.create(self)
+			get_parent().add_child(bullet)
+			self._lastShot = OS.get_ticks_msec()
 	
+	self._velocity = self._velocity.normalized() * self.speed
+
 func _physics_process(delta):
 	_read_input()
-	self._velocity = move_and_slide(self._velocity)
+	if self._velocity.x != 0 or self._velocity.y != 0:
+		self._velocity = move_and_slide(self._velocity)
 "
 
 [sub_resource type="Animation" id=3]
