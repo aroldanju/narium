@@ -19,6 +19,10 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_Transition_on_fade_out_finish():
 	get_tree().change_scene(\"res://scenes/MainMenu.tscn\")
+
+func _input(event):
+	if event.is_action_pressed(\"ui_select\"):
+		self.transition.fade_out()
 "
 
 [sub_resource type="Animation" id=1]

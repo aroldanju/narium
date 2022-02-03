@@ -37,10 +37,10 @@ func _input(event):
 			_down()
 		elif event.is_action_pressed(\"ui_up\"):
 			_up()
-		elif Input.is_action_just_pressed(\"ui_accept\"):
+		elif event.is_action_pressed(\"ui_accept\"):
 			_select()
 	else:
-		if Input.is_action_just_pressed(\"ui_accept\"):
+		if event.is_action_pressed(\"ui_accept\"):
 			self.audioSelect.play()
 			if not self.inMenu:
 				self.inMenu = true
@@ -54,11 +54,19 @@ func _down():
 	_apply_colors()
 
 func _select():
+	self.audioSelect.play()
 	match self.currentSelection:
+		0:
+			_play_selected(1)
+		1:
+			_play_selected(2)
 		3:
 			_credits_selected()
 		4:
 			_exit_selected()
+
+func _play_selected(players):
+	self.transition.fade_out()
 
 func _up():
 	self.currentSelection = self.currentSelection - 1
@@ -79,6 +87,10 @@ func _on_Transition_on_fade_in_finish():
 
 func _on_Transition_on_fade_out_finish():
 	match self.currentSelection:
+		0:
+			get_tree().change_scene(\"res://scenes/Game.tscn\")
+		1:
+			get_tree().change_scene(\"res://scenes/Game.tscn\")
 		3:
 			get_tree().change_scene(\"res://scenes/CreditsMenu.tscn\")
 		4:
