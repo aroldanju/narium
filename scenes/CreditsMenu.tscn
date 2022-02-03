@@ -1,0 +1,187 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/images/background_menu.png" type="Texture" id=1]
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=2]
+[ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Control
+
+onready var transition := $Transition
+onready var animation := $AnimationPlayer
+
+func _ready():
+	self.transition.fade_in()
+	self.animation.play(\"credits\")
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	self.transition.fade_out()
+
+func _on_Transition_on_fade_out_finish():
+	get_tree().change_scene(\"res://scenes/MainMenu.tscn\")
+"
+
+[sub_resource type="Animation" id=1]
+resource_name = "credits"
+tracks/0/type = "value"
+tracks/0/path = NodePath("VBoxContainer:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 272 ), Vector2( 0, -324 ) ]
+}
+
+[node name="CreditsMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 272.0
+margin_bottom = 326.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 480.0
+margin_bottom = 10.0
+text = "Design & Programming"
+align = 1
+
+[node name="Label4" type="Label" parent="VBoxContainer"]
+margin_top = 14.0
+margin_right = 480.0
+margin_bottom = 24.0
+text = "Amador Roldán"
+align = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 480.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Label6" type="Label" parent="VBoxContainer"]
+margin_top = 42.0
+margin_right = 480.0
+margin_bottom = 52.0
+text = "Backgrounds"
+align = 1
+
+[node name="Label7" type="Label" parent="VBoxContainer"]
+margin_top = 56.0
+margin_right = 480.0
+margin_bottom = 79.0
+text = "Menu
+https://deep-fold.itch.io/space-background-generator"
+align = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 83.0
+margin_right = 480.0
+margin_bottom = 93.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Label9" type="Label" parent="VBoxContainer"]
+margin_top = 97.0
+margin_right = 480.0
+margin_bottom = 107.0
+text = "Sound Effects"
+align = 1
+
+[node name="Label10" type="Label" parent="VBoxContainer"]
+margin_top = 111.0
+margin_right = 480.0
+margin_bottom = 147.0
+text = "Menu selection
+Michel Baradari
+https://opengameart.org/users/qubodup"
+align = 1
+
+[node name="MarginContainer5" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 151.0
+margin_right = 480.0
+margin_bottom = 161.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+margin_top = 165.0
+margin_right = 480.0
+margin_bottom = 175.0
+text = "Fonts"
+align = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+margin_top = 179.0
+margin_right = 480.0
+margin_bottom = 215.0
+text = "Game font 
+Planetary Contact
+Available on https://fontenddev.com/fonts/planetary-contact/"
+align = 1
+
+[node name="Label5" type="Label" parent="VBoxContainer"]
+margin_top = 219.0
+margin_right = 480.0
+margin_bottom = 255.0
+text = "Title font 
+Ethnocentric
+Available on https://www.dafont.com/es/ethnocentric.font"
+align = 1
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 259.0
+margin_right = 480.0
+margin_bottom = 269.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Label8" type="Label" parent="VBoxContainer"]
+margin_top = 273.0
+margin_right = 480.0
+margin_bottom = 283.0
+text = "Made with Godot Engine"
+align = 1
+
+[node name="MarginContainer6" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 287.0
+margin_right = 480.0
+margin_bottom = 297.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Label11" type="Label" parent="VBoxContainer"]
+margin_top = 301.0
+margin_right = 480.0
+margin_bottom = 324.0
+text = "Source code available on
+https://github.com/aroldanju/narium"
+align = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 0.05
+anims/credits = SubResource( 1 )
+
+[node name="Transition" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="on_fade_out_finish" from="Transition" to="." method="_on_Transition_on_fade_out_finish"]

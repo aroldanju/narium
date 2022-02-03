@@ -27,7 +27,10 @@ func _ready():
 
 func _exit_selected():
 	self.transition.fade_out()
-	
+
+func _credits_selected():
+	self.transition.fade_out()
+
 func _input(event):
 	if self.inMenu:
 		if event.is_action_pressed(\"ui_down\"):
@@ -53,6 +56,8 @@ func _down():
 func _select():
 	match self.currentSelection:
 		3:
+			_credits_selected()
+		4:
 			_exit_selected()
 
 func _up():
@@ -73,9 +78,13 @@ func _on_Transition_on_fade_in_finish():
 	self.labelStartAnimation.play(\"waiting\")
 
 func _on_Transition_on_fade_out_finish():
-	self.labelStart.visible = false
-	self.menu.visible = false
-	get_tree().quit()
+	match self.currentSelection:
+		3:
+			get_tree().change_scene(\"res://scenes/CreditsMenu.tscn\")
+		4:
+			self.labelStart.visible = false
+			self.menu.visible = false
+			get_tree().quit()
 
 func _on_TimerMenu_timeout():
 	self.menu.visible = true
@@ -145,6 +154,7 @@ __meta__ = {
 }
 
 [node name="Menu" type="VBoxContainer" parent="."]
+visible = false
 margin_top = 144.0
 margin_right = 480.0
 margin_bottom = 196.0
