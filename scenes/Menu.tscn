@@ -79,6 +79,7 @@ func _create_option(option):
 	var label = Label.new()
 	label.text = option
 	label.align = Label.ALIGN_CENTER
+	label.add_color_override(\"font_color_shadow\", Color(0.17, 0.0, 0.35))
 	$Labels.add_child(label)
 	
 	_apply_colors()

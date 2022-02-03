@@ -11,13 +11,13 @@ config_version=4
 [application]
 
 config/name="Narium"
-run/main_scene="res://Scenes/MainMenu.tscn"
+run/main_scene="res://scenes/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [display]
 
-window/size/width=320
-window/size/height=240
+window/size/width=480
+window/size/height=270
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 

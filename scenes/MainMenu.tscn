@@ -1,0 +1,221 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=2]
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=3]
+[ext_resource path="res://assets/images/background_menu.png" type="Texture" id=4]
+[ext_resource path="res://assets/images/title.png" type="Texture" id=5]
+[ext_resource path="res://assets/sounds/menu_select.mp3" type="AudioStream" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+onready var timerMenu := $TimerMenu
+onready var menu := $Menu
+onready var labelStart := $LabelPressStart
+onready var labelStartAnimation := $LabelPressStart/AnimationPlayer
+onready var transition := $Transition
+onready var audioSelect := $AudioSelect
+
+var inMenu: bool = false
+var currentSelection: int = 0
+
+func _ready():
+	$Transition.fade_in()
+	$Menu.visible = false
+	$LabelPressStart.visible = false
+	_apply_colors()
+
+func _exit_selected():
+	self.transition.fade_out()
+	
+func _input(event):
+	if self.inMenu:
+		if event.is_action_pressed(\"ui_down\"):
+			_down()
+		elif event.is_action_pressed(\"ui_up\"):
+			_up()
+		elif Input.is_action_just_pressed(\"ui_accept\"):
+			_select()
+	else:
+		if Input.is_action_just_pressed(\"ui_accept\"):
+			self.audioSelect.play()
+			if not self.inMenu:
+				self.inMenu = true
+				self.labelStartAnimation.play(\"selection\")
+				self.timerMenu.start(1.0)
+				self.labelStart.visible = false
+func _down():
+	self.currentSelection = self.currentSelection + 1
+	if self.currentSelection >= 4:
+		self.currentSelection = 0
+	_apply_colors()
+
+func _select():
+	match self.currentSelection:
+		3:
+			_exit_selected()
+
+func _up():
+	self.currentSelection = self.currentSelection - 1
+	if self.currentSelection < 0:
+		self.currentSelection = 3
+	_apply_colors()
+	
+func _apply_colors():
+	for child in self.menu.get_children():
+		child.add_color_override(\"font_color\", Color(1, 1, 1))
+	
+	if self.menu.get_child_count() > 0:
+		self.menu.get_child(self.currentSelection).add_color_override(\"font_color\", Color(1.0, 0.77, 0))
+
+func _on_Transition_on_fade_in_finish():
+	self.labelStart.visible = true
+	self.labelStartAnimation.play(\"waiting\")
+
+func _on_Transition_on_fade_out_finish():
+	self.labelStart.visible = false
+	self.menu.visible = false
+	get_tree().quit()
+
+func _on_TimerMenu_timeout():
+	self.menu.visible = true
+	self.labelStartAnimation.stop()
+	self.labelStart.visible = false
+"
+
+[sub_resource type="Animation" id=3]
+resource_name = "selection"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "waiting"
+length = 1.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 3 )
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureBackground" type="TextureRect" parent="."]
+margin_right = 480.0
+margin_bottom = 270.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureTitle" type="TextureRect" parent="."]
+margin_top = 56.0
+margin_right = 480.0
+margin_bottom = 97.0
+texture = ExtResource( 5 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu" type="VBoxContainer" parent="."]
+margin_top = 144.0
+margin_right = 480.0
+margin_bottom = 196.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label1Up" type="Label" parent="Menu"]
+margin_right = 480.0
+margin_bottom = 10.0
+text = "1 UP GAME"
+align = 1
+
+[node name="Label2Up" type="Label" parent="Menu"]
+margin_top = 14.0
+margin_right = 480.0
+margin_bottom = 24.0
+text = "2 UP GAME"
+align = 1
+
+[node name="LabelOptions" type="Label" parent="Menu"]
+margin_top = 28.0
+margin_right = 480.0
+margin_bottom = 38.0
+text = "OPTIONS"
+align = 1
+
+[node name="LabelCredits" type="Label" parent="Menu"]
+margin_top = 42.0
+margin_right = 480.0
+margin_bottom = 52.0
+text = "CREDITS"
+align = 1
+
+[node name="LabelExit" type="Label" parent="Menu"]
+margin_top = 56.0
+margin_right = 480.0
+margin_bottom = 66.0
+text = "EXIT"
+align = 1
+
+[node name="LabelPressStart" type="Label" parent="."]
+margin_top = 163.0
+margin_right = 480.0
+margin_bottom = 173.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0.176471, 0, 0.352941, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+text = "PRESS START"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LabelPressStart"]
+playback_speed = 2.0
+anims/selection = SubResource( 3 )
+anims/waiting = SubResource( 2 )
+
+[node name="Transition" parent="." instance=ExtResource( 2 )]
+visible = false
+
+[node name="TimerMenu" type="Timer" parent="."]
+one_shot = true
+
+[node name="AudioSelect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[connection signal="on_fade_in_finish" from="Transition" to="." method="_on_Transition_on_fade_in_finish"]
+[connection signal="on_fade_out_finish" from="Transition" to="." method="_on_Transition_on_fade_out_finish"]
+[connection signal="timeout" from="TimerMenu" to="." method="_on_TimerMenu_timeout"]
