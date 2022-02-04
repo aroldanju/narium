@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/images/background_level_01.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Hud.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=4]
+[ext_resource path="res://assets/images/background_level_01.png" type="Texture" id=5]
+[ext_resource path="res://scenes/levels/LevelAsteroids.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -12,17 +14,38 @@ onready var transition := $CanvasLayer/Control/Transition
 onready var player := $Player
 onready var labelLevel := $CanvasLayer/Control/LabelLevel
 onready var labelLevelAnimation := $CanvasLayer/Control/LabelLevel/AnimationPlayer
+onready var hud := $CanvasLayer/Control/Hud
 
 func _ready():
-	self.player.position = Vector2(72, 134)
-	self.transition.fade_in()
+	#self.transition.fade_in()
+	start()
 
 func _on_Transition_on_fade_out_finish():
 	pass
 
 func _on_Transition_on_fade_in_finish():
+	start()
+
+func _on_LevelAsteroids_on_collision(collision):
+	if collision.collider == self.player:
+		hit_player()
+
+func hit_player():
+	start()
+
+func start():
+	self.player.position = Vector2(72, 134)
 	self.labelLevelAnimation.play(\"fade_in\")
+	self.hud.create(Global.highscore, Global.credits, Global.players.size())
 "
+
+[sub_resource type="Environment" id=5]
+background_mode = 4
+background_canvas_max_layer = 2
+glow_enabled = true
+glow_blend_mode = 0
+glow_hdr_threshold = 4.0
+glow_bicubic_upscale = true
 
 [sub_resource type="Animation" id=4]
 resource_name = "fade_in"
@@ -55,12 +78,17 @@ tracks/1/keys = {
 [node name="Game" type="Node2D"]
 script = SubResource( 1 )
 
-[node name="Background" type="Sprite" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 240, 135 )
-texture = ExtResource( 2 )
+texture = ExtResource( 5 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( 96, 135 )
+
+[node name="LevelAsteroids" parent="." instance=ExtResource( 6 )]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -95,5 +123,8 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/LabelLevel"]
 anims/fade_in = SubResource( 4 )
 
+[node name="Hud" parent="CanvasLayer/Control" instance=ExtResource( 2 )]
+
+[connection signal="on_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_collision"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]

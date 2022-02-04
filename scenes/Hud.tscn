@@ -1,0 +1,262 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/BeamBar.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends VBoxContainer
+
+onready var scorePlayer1 := $ScoreContainer/Player1Score/LabelScore
+onready var scorePlayer2 := $ScoreContainer/Player2Score/LabelScore
+onready var scoreHigh := $ScoreContainer/HiScore/LabelScore
+onready var beamPlayer1 := $HBoxContainer/BeamBar1
+onready var beamPlayer2 := $HBoxContainer/BeamBar2
+onready var credits := $HBoxContainer/LabelCredits
+onready var animationScorePlayer1 := $ScoreContainer/Player1Score/LabelScore/AnimationPlayer
+onready var animationScorePlayer2 := $ScoreContainer/Player2Score/LabelScore/AnimationPlayer
+
+func _ready():
+	pass
+
+func create(highscore, credits, players):
+	set_score(1, 0)
+	if players == 1:
+		disable_player(2)
+	
+	set_credits(credits)
+	set_highscore(highscore)
+
+func set_highscore(score):
+	self.scoreHigh.text = String(score)
+
+func set_score(player, score):
+	var scoreString = String(score)
+	
+	match player:
+		1:
+			self.scorePlayer1.text = scoreString
+		2:
+			self.scorePlayer2.text = scoreString
+
+func add_beam_amount(player, amount):
+	match player:
+		1:
+			self.beamPlayer1.set_current_value(amount)
+		2:
+			self.beamPlayer2.set_current_value(amount)
+
+func set_credits(credits):
+	self.credits.text = \"Credits: \" + String(credits)
+
+func disable_player(player):
+	match player:
+		1:
+			self.scorePlayer1.text = \"Game Over\"
+			self.animationScorePlayer2.play(\"disabled\")
+		2:
+			self.scorePlayer2.text = \"Game Over\"
+			self.animationScorePlayer2.play(\"disabled\")
+"
+
+[sub_resource type="Animation" id=3]
+resource_name = "disabled"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "disabled"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[node name="Hud" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreContainer" type="HBoxContainer" parent="."]
+margin_right = 480.0
+margin_bottom = 24.0
+
+[node name="MarginContainer" type="MarginContainer" parent="ScoreContainer"]
+margin_right = 10.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_vertical = 3
+
+[node name="Player1Score" type="VBoxContainer" parent="ScoreContainer"]
+margin_left = 14.0
+margin_right = 79.0
+margin_bottom = 24.0
+
+[node name="LabelUp" type="Label" parent="ScoreContainer/Player1Score"]
+margin_right = 65.0
+margin_bottom = 10.0
+text = "1 UP SCORE"
+
+[node name="LabelScore" type="Label" parent="ScoreContainer/Player1Score"]
+margin_top = 14.0
+margin_right = 65.0
+margin_bottom = 24.0
+text = "0"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ScoreContainer/Player1Score/LabelScore"]
+anims/disabled = SubResource( 3 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="ScoreContainer"]
+margin_left = 83.0
+margin_right = 210.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HiScore" type="VBoxContainer" parent="ScoreContainer"]
+margin_left = 214.0
+margin_right = 264.0
+margin_bottom = 24.0
+
+[node name="LabelUp" type="Label" parent="ScoreContainer/HiScore"]
+margin_right = 50.0
+margin_bottom = 10.0
+text = "HI-SCORE"
+align = 1
+
+[node name="LabelScore" type="Label" parent="ScoreContainer/HiScore"]
+margin_top = 14.0
+margin_right = 50.0
+margin_bottom = 24.0
+text = "0"
+align = 1
+
+[node name="MarginContainer4" type="MarginContainer" parent="ScoreContainer"]
+margin_left = 268.0
+margin_right = 395.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Player2Score" type="VBoxContainer" parent="ScoreContainer"]
+margin_left = 399.0
+margin_right = 466.0
+margin_bottom = 24.0
+
+[node name="LabelUp" type="Label" parent="ScoreContainer/Player2Score"]
+margin_right = 67.0
+margin_bottom = 10.0
+text = "2 UP SCORE"
+
+[node name="LabelScore" type="Label" parent="ScoreContainer/Player2Score"]
+margin_top = 14.0
+margin_right = 67.0
+margin_bottom = 24.0
+text = "0"
+align = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ScoreContainer/Player2Score/LabelScore"]
+anims/disabled = SubResource( 2 )
+
+[node name="MarginContainer3" type="MarginContainer" parent="ScoreContainer"]
+margin_left = 470.0
+margin_right = 480.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_top = 28.0
+margin_right = 480.0
+margin_bottom = 250.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 254.0
+margin_right = 480.0
+margin_bottom = 264.0
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+margin_right = 10.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_vertical = 3
+
+[node name="Label1Beam" type="Label" parent="HBoxContainer"]
+margin_left = 14.0
+margin_right = 69.0
+margin_bottom = 10.0
+text = "1UP BEAM"
+
+[node name="BeamBar1" parent="HBoxContainer" instance=ExtResource( 2 )]
+
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+margin_left = 137.0
+margin_right = 204.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelCredits" type="Label" parent="HBoxContainer"]
+margin_left = 208.0
+margin_right = 269.0
+margin_bottom = 10.0
+text = "CREDITS: 3"
+
+[node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer"]
+margin_left = 273.0
+margin_right = 341.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BeamBar2" parent="HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 345.0
+margin_right = 405.0
+
+[node name="Label2Beam" type="Label" parent="HBoxContainer"]
+margin_left = 409.0
+margin_right = 466.0
+margin_bottom = 10.0
+text = "2UP BEAM"
+
+[node name="MarginContainer3" type="MarginContainer" parent="HBoxContainer"]
+margin_left = 470.0
+margin_right = 480.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 0 )
+size_flags_vertical = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+margin_top = 268.0
+margin_right = 480.0
+margin_bottom = 270.0
+rect_min_size = Vector2( 0, 2 )
+size_flags_horizontal = 3

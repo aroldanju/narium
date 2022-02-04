@@ -1,0 +1,325 @@
+[gd_scene load_steps=35 format=2]
+
+[ext_resource path="res://assets/images/tiles_rock.png" type="Texture" id=1]
+[ext_resource path="res://scenes/enemies/AsteroidEnemyMedium1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/enemies/AsteroidEnemyLarge1.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=17]
+script/source = "extends Node2D
+
+signal on_collision
+
+func _ready():
+	pass # Replace with function body.
+
+func _on_AsteroidEnemy_on_collision(collision):
+	emit_signal(\"on_collision\", collision)
+"
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+points = PoolVector2Array( 24, 18.7121, 24, 28, 16.0203, 28, 21.1795, 18.0392 )
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+points = PoolVector2Array( 0, 18.3756, 6.71284, 14.8988, 9.85323, 8.05721, 17.592, 12.207, 24, 6.93565, 24, 28, 0, 28 )
+
+[sub_resource type="ConvexPolygonShape2D" id=4]
+points = PoolVector2Array( 0, 7.04781, 9.40611, 13.2164, 11.0885, 10.4125, 15.5747, 12.3192, 24, 6.48702, 24, 28, 0, 28 )
+
+[sub_resource type="ConvexPolygonShape2D" id=5]
+points = PoolVector2Array( 0, 6.71133, 6.60371, 12.207, 14.5668, 8.05722, 17.2586, 15.2352, 21.6327, 15.2352, 24, 18.8242, 24, 28, 0, 28 )
+
+[sub_resource type="ConvexPolygonShape2D" id=6]
+points = PoolVector2Array( 0, 18.5999, 6.60523, 28, 0, 28 )
+
+[sub_resource type="ConvexPolygonShape2D" id=7]
+points = PoolVector2Array( 16.5811, 0, 24, 0, 24, 28, 15.3474, 27.8359, 8.618, 19.6485, 20.5066, 11.5732, 14.7866, 3.83441, 16.8054, 0.806183 )
+
+[sub_resource type="ConvexPolygonShape2D" id=8]
+points = PoolVector2Array( 6.15659, 0, 8.39973, 3.27363, 1.89465, 10.1152, 13.3346, 18.8634, 6.94169, 28, 0, 28, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=9]
+points = PoolVector2Array( 6.71739, 0, 2.34328, 4.5465, 2.67975, 12.1731, 0, 12.6218, 0, 0, 7.05386, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=10]
+points = PoolVector2Array( 0, 0, 24, 0, 24, 12.9582, 20.5111, 11.5002, 14.7912, 22.7159, 7.9496, 18.3418, 0, 26.9778 )
+
+[sub_resource type="ConvexPolygonShape2D" id=11]
+points = PoolVector2Array( 0, 0, 24, 0, 24, 27.09, 9.51827, 19.912, 0, 27.3143 )
+
+[sub_resource type="ConvexPolygonShape2D" id=12]
+points = PoolVector2Array( 24, 0, 24, 27.5386, 15.9097, 18.3418, 8.61951, 22.9402, 3.01168, 11.7245, 0, 15.4257, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=13]
+points = PoolVector2Array( 24, 0, 24, 13.7433, 20.5066, 12.5096, 21.0674, 4.88297, 16.0203, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=14]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=15]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=16]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=18]
+points = PoolVector2Array( 0, 5.73537, 7.88541, 11.3881, 13.4035, 10.1768, 15.1532, 11.7918, 20.1329, 9.773, 11.923, 3.04361, 18.1141, 0, 24, 0, 24, 28, 0, 28 )
+
+[sub_resource type="ConvexPolygonShape2D" id=19]
+points = PoolVector2Array( 7.19456, 0, 9.99847, 4.09788, 4.95143, 9.36924, 5.2879, 10.3786, 8.54044, 12.6218, 12.5781, 10.3786, 15.382, 12.9582, 24, 5.78023, 24, 28, 0, 28, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=20]
+points = PoolVector2Array( 0, 0, 24, 0, 24, 28, 16.6875, 28, 10.3887, 20.8304, 7.80466, 21.7995, 0, 27.4521 )
+
+[sub_resource type="ConvexPolygonShape2D" id=21]
+points = PoolVector2Array( 0, 28, 0, 0, 24, 0, 24, 26.8061, 18.011, 20.9919, 12.6813, 21.961, 7.51311, 27.7752 )
+
+[sub_resource type="ConvexPolygonShape2D" id=22]
+points = PoolVector2Array( 0, 6.71989, 8.24873, 12.5341, 12.1249, 11.5651, 16.4855, 13.6646, 20.0386, 8.49646, 15.678, 3.48979, 18.1006, 0, 24, 0, 24, 28, 0, 28, 0, 5.26634 )
+
+[sub_resource type="ConvexPolygonShape2D" id=23]
+points = PoolVector2Array( 5.8576, 0, 8.76471, 4.62033, 4.40405, 9.4655, 9.08772, 13.1801, 11.3488, 10.7575, 14.5789, 12.5341, 24, 7.04291, 24, 28, 0, 28, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=24]
+points = PoolVector2Array( 24, 0, 24, 28, 15.1935, 28, 19.0696, 24.2392, 11.3173, 18.2635, 11.8018, 14.7103, 5.82614, 11.6417, 16.001, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=25]
+points = PoolVector2Array( 5.8576, 0, 17.486, 11.4802, 10.8643, 15.8409, 10.7028, 18.425, 2.6275, 24.8852, 6.98814, 28, 0, 28, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=26]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=27]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=28]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=29]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=30]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=31]
+points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
+
+[sub_resource type="TileSet" id=1]
+0/name = "tiles_rock.png 0"
+0/texture = ExtResource( 1 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 216, 196 )
+0/tile_mode = 2
+0/autotile/icon_coordinate = Vector2( 0, 0 )
+0/autotile/tile_size = Vector2( 24, 28 )
+0/autotile/spacing = 0
+0/autotile/occluder_map = [  ]
+0/autotile/navpoly_map = [  ]
+0/autotile/priority_map = [  ]
+0/autotile/z_index_map = [  ]
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape = SubResource( 2 )
+0/shape_one_way = false
+0/shape_one_way_margin = 1.0
+0/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 2 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 1, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 3 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 2, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 4 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 3, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 5 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 4, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 6 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 0, 1 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 7 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 4, 1 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 8 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 4, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 9 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 3, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 10 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 2, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 11 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 1, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 12 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 0, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 13 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 1, 1 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 14 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 2, 1 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 15 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 3, 1 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 16 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 5, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 18 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 8, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 19 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 5, 3 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 20 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 8, 3 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 21 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 5, 4 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 22 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 8, 4 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 23 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 5, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 24 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 8, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 25 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 6, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 26 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 7, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 27 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 6, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 28 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 7, 2 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 29 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 6, 3 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 30 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 7, 3 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 31 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+0/z_index = 0
+
+[node name="LevelAsteroids" type="Node2D"]
+script = SubResource( 17 )
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource( 1 )
+cell_size = Vector2( 24, 28 )
+format = 1
+tile_data = PoolIntArray( 0, 0, 65538, 1, 0, 196616, 2, 0, 131075, 3, 0, 131076, 11, 0, 131072, 12, 0, 131073, 13, 0, 131074, 14, 0, 196613, 15, 0, 131078, 16, 0, 65538, 17, 0, 65538, 18, 0, 65539, 19, 0, 65540, 65536, 0, 131075, 65537, 0, 131076, 65550, 0, 131072, 65551, 0, 131073, 65552, 0, 131074, 65553, 0, 131074, 65554, 0, 131075, 65555, 0, 131076, 393234, 0, 0, 393235, 0, 1, 393236, 0, 2, 393237, 0, 3, 393238, 0, 4, 458770, 0, 65536, 458771, 0, 65537, 458772, 0, 65538, 458773, 0, 65539, 458774, 0, 131080, 458775, 0, 3, 458776, 0, 4, 524304, 0, 0, 524305, 0, 1, 524306, 0, 131077, 524307, 0, 131078, 524308, 0, 65538, 524309, 0, 65538, 524310, 0, 65538, 524311, 0, 65539, 524312, 0, 131080, 524313, 0, 3, 524314, 0, 4, 589824, 0, 3, 589838, 0, 0, 589839, 0, 1, 589840, 0, 131077, 589841, 0, 131078, 589842, 0, 65538, 589843, 0, 65538, 589844, 0, 65538, 589845, 0, 65538, 589846, 0, 65538, 589847, 0, 65538, 589848, 0, 65538, 589849, 0, 65539, 589850, 0, 65540 )
+
+[node name="AsteroidEnemy" parent="." instance=ExtResource( 2 )]
+position = Vector2( 360, 140 )
+rotationSpeed = -25.0
+movementSpeed = 25.0
+velocity = Vector2( -1, 0 )
+
+[node name="AsteroidEnemy2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 408, 94 )
+rotationSpeed = 20.0
+velocity = Vector2( -1, 0.5 )
+
+[connection signal="on_collision" from="AsteroidEnemy" to="." method="_on_AsteroidEnemy_on_collision"]
+[connection signal="on_collision" from="AsteroidEnemy2" to="." method="_on_AsteroidEnemy_on_collision"]

@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/images/beam_bar_progress.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/beam_bar.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends TextureRect
+
+export(int) var currentValue: int setget set_current_value, get_current_value
+export(int) var maximumValue: int setget set_maximum_value, get_maximum_value
+
+onready var progress := $Progress
+onready var tweenProgress := $Progress/Tween
+onready var loss := $Loss
+onready var tweenLoss := $Loss/Tween
+onready var gain := $Gain
+onready var tweenGain := $Gain/Tween
+
+func _ready():
+	pass
+
+func set_maximum_value(_maximum_value):
+	maximumValue = _maximum_value
+	
+	loss.max_value = maximumValue
+	progress.max_value = maximumValue
+	gain.max_value = maximumValue
+	
+func get_maximum_value():
+	return maximumValue
+
+func set_current_value(_current_value):
+	currentValue = _current_value
+	animate_value(progress.value, currentValue)
+
+func get_current_value():
+	return currentValue
+	
+func animate_value(start, end):
+	var progressSpeed = 0.3
+	
+	if start > end:
+		loss.visible = true
+		gain.visible = false
+		tweenLoss.interpolate_property(loss, \"value\", start, end, 1.0, Tween.TRANS_EXPO, Tween.EASE_OUT)
+		tweenLoss.start()
+		progressSpeed = 0.3
+	else:
+		gain.visible = true
+		loss.visible = false
+		tweenGain.interpolate_property(gain, \"value\", start, end, 0.3, Tween.TRANS_EXPO, Tween.EASE_OUT)
+		tweenGain.start()
+		progressSpeed = 1.0
+	
+	tweenProgress.interpolate_property(self.progress, \"value\", start, end, progressSpeed, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	tweenProgress.start()
+"
+
+[node name="TextureRect" type="TextureRect"]
+margin_left = 73.0
+margin_top = 3.0
+margin_right = 133.0
+margin_bottom = 10.0
+size_flags_vertical = 12
+texture = ExtResource( 2 )
+stretch_mode = 6
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Loss" type="TextureProgress" parent="."]
+modulate = Color( 3.5, 0.8, 0.8, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 57.0
+margin_bottom = 5.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Loss"]
+
+[node name="Gain" type="TextureProgress" parent="."]
+modulate = Color( 2.3, 1.7, 2.3, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 57.0
+margin_bottom = 5.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Gain"]
+
+[node name="Progress" type="TextureProgress" parent="."]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 57.0
+margin_bottom = 5.0
+texture_progress = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Progress"]

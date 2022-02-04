@@ -66,6 +66,7 @@ func _select():
 			_exit_selected()
 
 func _play_selected(players):
+	Global.start(players)
 	self.transition.fade_out()
 
 func _up():
@@ -87,9 +88,7 @@ func _on_Transition_on_fade_in_finish():
 
 func _on_Transition_on_fade_out_finish():
 	match self.currentSelection:
-		0:
-			get_tree().change_scene(\"res://scenes/Game.tscn\")
-		1:
+		0, 1:
 			get_tree().change_scene(\"res://scenes/Game.tscn\")
 		3:
 			get_tree().change_scene(\"res://scenes/CreditsMenu.tscn\")

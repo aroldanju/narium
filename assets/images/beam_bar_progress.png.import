@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/background_level_01.png-4f710f627c734695c5b4453651054c4a.stex"
+path="res://.import/beam_bar_progress.png-47df78c0201d3fa25202b7e8a9abe9cf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/background_level_01.png"
-dest_files=[ "res://.import/background_level_01.png-4f710f627c734695c5b4453651054c4a.stex" ]
+source_file="res://assets/images/beam_bar_progress.png"
+dest_files=[ "res://.import/beam_bar_progress.png-47df78c0201d3fa25202b7e8a9abe9cf.stex" ]
 
 [params]
 
