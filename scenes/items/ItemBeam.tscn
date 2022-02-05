@@ -23,7 +23,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 0, -5 ), Vector2( 0, -5 ), Vector2( 0, 1 ) ]
 }
 
-[node name="ItemBeam" type="StaticBody2D"]
+[node name="ItemBeam" type="Area2D"]
 collision_layer = 8
 collision_mask = 4
 script = ExtResource( 2 )
@@ -36,3 +36,5 @@ shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/item = SubResource( 2 )
+
+[connection signal="area_entered" from="." to="." method="_on_ItemBeam_area_entered"]

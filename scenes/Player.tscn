@@ -6,8 +6,6 @@
 script/source = "extends Area2D
 
 signal on_collision_walls
-signal on_collision_enemy
-signal on_get_item
 
 var RielgunBullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
@@ -21,6 +19,8 @@ export(bool) var invulnerable = false
 
 var _velocity = Vector2()
 var _lastShot = 0
+
+var tilemap = null
 
 func _ready():
 	self.animation.play(\"default\")
@@ -45,6 +45,9 @@ func _read_input():
 	
 	self._velocity = self._velocity.normalized() * self.speed
 
+func _process(delta):
+	pass
+
 func _physics_process(delta):
 	_read_input()
 	
@@ -53,30 +56,12 @@ func _physics_process(delta):
 		self.position += self._velocity * delta
 		if self.position.x >= get_viewport().size.x or self.position.x < 0 or self.position.y < 0 or self.position.y >= get_viewport().size.y:
 			self.position = lastPosition
-
+	
 	for collider in get_overlapping_bodies():
-		if collider.collision_layer == 1 || collider.collision_layer == 2:
+		if collider.collision_layer == 1:
 			if not self.invulnerable:
 				if collider.collision_layer == 1:
 					emit_signal(\"on_collision_walls\", collider)
-				elif collider.collision_layer == 2:
-					emit_signal(\"on_collision_enemy\", collider)
-		if collider.collision_layer == 8:
-			emit_signal(\"on_get_item\", collider)
-	
-	\"\"\"
-	if self._velocity.x != 0 or self._velocity.y != 0:
-		self._velocity = move_and_slide(self._velocity)
-	
-	for i in range(get_slide_count()):
-		var collision = get_slide_collision(i)
-		if collision.collider.is_in_group(\"walls\") || collision.collider.is_in_group(\"enemies\"):
-			if not self.invulnerable:
-				if collision.collider.is_in_group(\"walls\"):
-					emit_signal(\"on_collision_walls\", collision)
-				elif collision.collider.is_in_group(\"enemies\"):
-					emit_signal(\"on_collision_enemy\", collision)
-	\"\"\"
 
 func set_invulnerable(seconds):
 	self.timerInvulnerable.start(seconds)

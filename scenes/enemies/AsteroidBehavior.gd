@@ -1,4 +1,10 @@
-extends StaticBody2D
+extends Area2D
+
+signal on_collision
+
+class_name Asteroid
+
+func get_class(): return "Asteroid"
 
 onready var sprite := $Sprite
 onready var collision := $CollisionPolygon2D
@@ -14,9 +20,5 @@ func _process(delta):
 	rotate(deg2rad(self.rotationSpeed) * delta)
 	self.position += self.velocity.normalized() * self.movementSpeed * delta
 
-"""
-	move_and_slide(self.velocity * self.movementSpeed)
-	for i in range(get_slide_count()):
-		var collision = get_slide_collision(i)
-		emit_signal("on_collision", collision)
-"""
+func _on_AsteroidEnemy_area_entered(area):
+	emit_signal("on_collision", self, area)

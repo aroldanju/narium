@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Hud.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=4]
 [ext_resource path="res://assets/images/background_level_01.png" type="Texture" id=5]
 [ext_resource path="res://scenes/levels/LevelAsteroids.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/sounds/mission_start.mp3" type="AudioStream" id=7]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -15,10 +16,12 @@ onready var player := $Player
 onready var labelLevel := $CanvasLayer/Control/LabelLevel
 onready var labelLevelAnimation := $CanvasLayer/Control/LabelLevel/AnimationPlayer
 onready var hud := $CanvasLayer/Control/Hud
+onready var audioMission := $AudioMission
 
 func _ready():
 	#self.transition.fade_in()
 	start()
+	self.audioMission.play()
 
 func _input(event):
 	pass
@@ -44,15 +47,18 @@ func start():
 	self.player.set_invulnerable(3.0)
 
 func _on_Player_on_collision_walls(wall):
-	print(\"_on_Player_on_collision_walls\")
 	start()
 
-func _on_Player_on_collision_enemy(enemy):
-	print(\"_on_Player_on_collision_enemy\")
-	start()
+func add_beam(player, amount):
+	var playerId = player - 1
+	Global.players[playerId].beam += amount
+	self.hud.set_beam_amount(player, Global.players[playerId].beam)
 
-func _on_Player_on_get_item(item):
+func _on_LevelAsteroids_on_enemy_collision(enemy, player):
+	if not player.invulnerable:
+		start()
 
+func _on_LevelAsteroids_on_item_collision(item, player):
 	match item.type:
 		Global.ItemType.ITEM_BEAM:
 			add_beam(1, 25)
@@ -60,11 +66,6 @@ func _on_Player_on_get_item(item):
 			pass
 	
 	item.queue_free()
-
-func add_beam(player, amount):
-	var playerId = player - 1
-	Global.players[playerId].beam += amount
-	self.hud.set_beam_amount(player, Global.players[playerId].beam)
 "
 
 [sub_resource type="Environment" id=5]
@@ -154,8 +155,11 @@ anims/fade_in = SubResource( 4 )
 
 [node name="Hud" parent="CanvasLayer/Control" instance=ExtResource( 2 )]
 
-[connection signal="on_collision_enemy" from="Player" to="." method="_on_Player_on_collision_enemy"]
+[node name="AudioMission" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
 [connection signal="on_collision_walls" from="Player" to="." method="_on_Player_on_collision_walls"]
-[connection signal="on_get_item" from="Player" to="." method="_on_Player_on_get_item"]
+[connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
+[connection signal="on_item_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_item_collision"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]
