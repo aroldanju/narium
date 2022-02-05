@@ -20,6 +20,10 @@ func _ready():
 	#self.transition.fade_in()
 	start()
 
+func _input(event):
+	if event.is_action_pressed(\"fire\"):
+		pass
+
 func _on_Transition_on_fade_out_finish():
 	pass
 
@@ -31,12 +35,22 @@ func _on_LevelAsteroids_on_collision(collision):
 		hit_player()
 
 func hit_player():
-	start()
+	if not self.player.invulnerable:
+		start()
 
 func start():
 	self.player.position = Vector2(72, 134)
 	self.labelLevelAnimation.play(\"fade_in\")
 	self.hud.create(Global.highscore, Global.credits, Global.players.size())
+	self.player.set_invulnerable(3.0)
+
+func _on_Player_on_collision_walls(wall):
+	print(\"_on_Player_on_collision_walls\")
+	start()
+
+func _on_Player_on_collision_enemy(enemy):
+	print(\"_on_Player_on_collision_walls\")
+	start()
 "
 
 [sub_resource type="Environment" id=5]
@@ -89,6 +103,7 @@ texture = ExtResource( 5 )
 position = Vector2( 96, 135 )
 
 [node name="LevelAsteroids" parent="." instance=ExtResource( 6 )]
+speed = 30.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -125,6 +140,7 @@ anims/fade_in = SubResource( 4 )
 
 [node name="Hud" parent="CanvasLayer/Control" instance=ExtResource( 2 )]
 
-[connection signal="on_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_collision"]
+[connection signal="on_collision_enemy" from="Player" to="." method="_on_Player_on_collision_enemy"]
+[connection signal="on_collision_walls" from="Player" to="." method="_on_Player_on_collision_walls"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]

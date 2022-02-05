@@ -1,15 +1,22 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/images/player.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=4]
-script/source = "extends KinematicBody2D
+script/source = "extends Area2D
+
+signal on_collision_walls
+signal on_collision_enemy
 
 var RielgunBullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
 onready var animation := $Sprite/AnimationPlayer
+onready var timerInvulnerable := $TimerInvulnerable
+onready var playerAnimation := $AnimationPlayer
+onready var collision := $CollisionShape2D
 
 export(float) var speed = 200.0
+export(bool) var invulnerable = false
 
 var _velocity = Vector2()
 var _lastShot = 0
@@ -39,8 +46,44 @@ func _read_input():
 
 func _physics_process(delta):
 	_read_input()
+	
+	if self._velocity.x != 0 or self._velocity.y != 0:
+		self.position += self._velocity * delta
+		
+	for collider in get_overlapping_bodies():
+		if collider.collision_layer == 1 || collider.collision_layer == 2:
+			if not self.invulnerable:
+				if collider.collision_layer == 1:
+					emit_signal(\"on_collision_walls\", collision)
+				elif collider.collision_layer == 2:
+					emit_signal(\"on_collision_enemy\", collision)
+	
+	\"\"\"
 	if self._velocity.x != 0 or self._velocity.y != 0:
 		self._velocity = move_and_slide(self._velocity)
+	
+	for i in range(get_slide_count()):
+		var collision = get_slide_collision(i)
+		if collision.collider.is_in_group(\"walls\") || collision.collider.is_in_group(\"enemies\"):
+			if not self.invulnerable:
+				if collision.collider.is_in_group(\"walls\"):
+					emit_signal(\"on_collision_walls\", collision)
+				elif collision.collider.is_in_group(\"enemies\"):
+					emit_signal(\"on_collision_enemy\", collision)
+	\"\"\"
+
+func set_invulnerable(seconds):
+	self.timerInvulnerable.start(seconds)
+	self.invulnerable = true
+	self.playerAnimation.play(\"invulnerable\")
+	self.collision.disabled = true
+
+func _on_TimerInvulnerable_timeout():
+	self.invulnerable = false
+	self.playerAnimation.stop()
+	visible = true
+	self.collision.disabled = false
+
 "
 
 [sub_resource type="Animation" id=3]
@@ -64,7 +107,26 @@ tracks/0/keys = {
 radius = 4.0
 height = 12.0
 
-[node name="Player" type="KinematicBody2D"]
+[sub_resource type="Animation" id=5]
+resource_name = "invulnerable"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[node name="Player" type="Area2D"]
+collision_layer = 4
+collision_mask = 11
 script = SubResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -85,3 +147,11 @@ limit_top = 0
 limit_right = 480
 limit_bottom = 270
 smoothing_enabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/invulnerable = SubResource( 5 )
+
+[node name="TimerInvulnerable" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="TimerInvulnerable" to="." method="_on_TimerInvulnerable_timeout"]

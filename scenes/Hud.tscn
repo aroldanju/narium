@@ -38,7 +38,7 @@ func set_score(player, score):
 		2:
 			self.scorePlayer2.text = scoreString
 
-func add_beam_amount(player, amount):
+func set_beam_amount(player, amount):
 	match player:
 		1:
 			self.beamPlayer1.set_current_value(amount)

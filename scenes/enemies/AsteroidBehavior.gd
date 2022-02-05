@@ -1,6 +1,4 @@
-extends KinematicBody2D
-
-signal on_collision
+extends StaticBody2D
 
 onready var sprite := $Sprite
 onready var collision := $CollisionPolygon2D
@@ -14,7 +12,11 @@ func _ready():
 
 func _process(delta):
 	rotate(deg2rad(self.rotationSpeed) * delta)
-	var collision = move_and_collide(self.velocity * self.movementSpeed * delta)
-	
-	if collision:
+	self.position += self.velocity.normalized() * self.movementSpeed * delta
+
+"""
+	move_and_slide(self.velocity * self.movementSpeed)
+	for i in range(get_slide_count()):
+		var collision = get_slide_collision(i)
 		emit_signal("on_collision", collision)
+"""

@@ -39,6 +39,10 @@ func get_current_value():
 func animate_value(start, end):
 	var progressSpeed = 0.3
 	
+	tweenGain.stop_all()
+	tweenLoss.stop_all()
+	tweenProgress.stop_all()
+	
 	if start > end:
 		loss.visible = true
 		gain.visible = false
@@ -54,6 +58,15 @@ func animate_value(start, end):
 	
 	tweenProgress.interpolate_property(self.progress, \"value\", start, end, progressSpeed, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tweenProgress.start()
+
+func _on_Tween_tween_completed(object, key):
+	pass
+
+func _on_TweenGain_tween_completed(object, key):
+	pass
+
+func _on_TweenProgress_tween_completed(object, key):
+	pass
 "
 
 [node name="TextureRect" type="TextureRect"]
@@ -106,3 +119,7 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="Progress"]
+
+[connection signal="tween_completed" from="Loss/Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="tween_completed" from="Gain/Tween" to="." method="_on_TweenGain_tween_completed"]
+[connection signal="tween_completed" from="Progress/Tween" to="." method="_on_TweenProgress_tween_completed"]

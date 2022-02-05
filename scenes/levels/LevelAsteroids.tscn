@@ -7,13 +7,18 @@
 [sub_resource type="GDScript" id=17]
 script/source = "extends Node2D
 
-signal on_collision
+export(float) var speed = 40.0
+
+onready var tileMap := $TileMap
 
 func _ready():
 	pass # Replace with function body.
 
-func _on_AsteroidEnemy_on_collision(collision):
-	emit_signal(\"on_collision\", collision)
+func _process(delta):
+	self.position.x -= self.speed * delta
+
+func _physics_process(delta):
+	pass
 "
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
@@ -307,19 +312,18 @@ script = SubResource( 17 )
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 24, 28 )
+collision_mask = 4
 format = 1
 tile_data = PoolIntArray( 0, 0, 65538, 1, 0, 196616, 2, 0, 131075, 3, 0, 131076, 11, 0, 131072, 12, 0, 131073, 13, 0, 131074, 14, 0, 196613, 15, 0, 131078, 16, 0, 65538, 17, 0, 65538, 18, 0, 65539, 19, 0, 65540, 65536, 0, 131075, 65537, 0, 131076, 65550, 0, 131072, 65551, 0, 131073, 65552, 0, 131074, 65553, 0, 131074, 65554, 0, 131075, 65555, 0, 131076, 393234, 0, 0, 393235, 0, 1, 393236, 0, 2, 393237, 0, 3, 393238, 0, 4, 458770, 0, 65536, 458771, 0, 65537, 458772, 0, 65538, 458773, 0, 65539, 458774, 0, 131080, 458775, 0, 3, 458776, 0, 4, 524304, 0, 0, 524305, 0, 1, 524306, 0, 131077, 524307, 0, 131078, 524308, 0, 65538, 524309, 0, 65538, 524310, 0, 65538, 524311, 0, 65539, 524312, 0, 131080, 524313, 0, 3, 524314, 0, 4, 589824, 0, 3, 589838, 0, 0, 589839, 0, 1, 589840, 0, 131077, 589841, 0, 131078, 589842, 0, 65538, 589843, 0, 65538, 589844, 0, 65538, 589845, 0, 65538, 589846, 0, 65538, 589847, 0, 65538, 589848, 0, 65538, 589849, 0, 65539, 589850, 0, 65540 )
 
 [node name="AsteroidEnemy" parent="." instance=ExtResource( 2 )]
-position = Vector2( 360, 140 )
+position = Vector2( 616, 80 )
 rotationSpeed = -25.0
 movementSpeed = 25.0
 velocity = Vector2( -1, 0 )
 
 [node name="AsteroidEnemy2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 408, 94 )
+position = Vector2( 544, 56 )
 rotationSpeed = 20.0
+movementSpeed = 20.0
 velocity = Vector2( -1, 0.5 )
-
-[connection signal="on_collision" from="AsteroidEnemy" to="." method="_on_AsteroidEnemy_on_collision"]
-[connection signal="on_collision" from="AsteroidEnemy2" to="." method="_on_AsteroidEnemy_on_collision"]
