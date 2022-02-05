@@ -70,10 +70,8 @@ func _on_TweenProgress_tween_completed(object, key):
 "
 
 [node name="TextureRect" type="TextureRect"]
-margin_left = 73.0
-margin_top = 3.0
-margin_right = 133.0
-margin_bottom = 10.0
+margin_right = 60.0
+margin_bottom = 7.0
 size_flags_vertical = 12
 texture = ExtResource( 2 )
 stretch_mode = 6

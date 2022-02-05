@@ -21,8 +21,7 @@ func _ready():
 	start()
 
 func _input(event):
-	if event.is_action_pressed(\"fire\"):
-		pass
+	pass
 
 func _on_Transition_on_fade_out_finish():
 	pass
@@ -49,8 +48,23 @@ func _on_Player_on_collision_walls(wall):
 	start()
 
 func _on_Player_on_collision_enemy(enemy):
-	print(\"_on_Player_on_collision_walls\")
+	print(\"_on_Player_on_collision_enemy\")
 	start()
+
+func _on_Player_on_get_item(item):
+
+	match item.type:
+		Global.ItemType.ITEM_BEAM:
+			add_beam(1, 25)
+		_:
+			pass
+	
+	item.queue_free()
+
+func add_beam(player, amount):
+	var playerId = player - 1
+	Global.players[playerId].beam += amount
+	self.hud.set_beam_amount(player, Global.players[playerId].beam)
 "
 
 [sub_resource type="Environment" id=5]
@@ -58,7 +72,7 @@ background_mode = 4
 background_canvas_max_layer = 2
 glow_enabled = true
 glow_blend_mode = 0
-glow_hdr_threshold = 4.0
+glow_hdr_luminance_cap = 115.85
 glow_bicubic_upscale = true
 
 [sub_resource type="Animation" id=4]
@@ -142,5 +156,6 @@ anims/fade_in = SubResource( 4 )
 
 [connection signal="on_collision_enemy" from="Player" to="." method="_on_Player_on_collision_enemy"]
 [connection signal="on_collision_walls" from="Player" to="." method="_on_Player_on_collision_walls"]
+[connection signal="on_get_item" from="Player" to="." method="_on_Player_on_get_item"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]

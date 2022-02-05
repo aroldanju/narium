@@ -1,5 +1,9 @@
 extends Node
 
+enum ItemType {
+	ITEM_BEAM
+}
+
 var players = [PlayerStats.new()]
 var credits: int = 2
 var highscore: int = 150000

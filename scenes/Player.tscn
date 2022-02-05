@@ -7,6 +7,7 @@ script/source = "extends Area2D
 
 signal on_collision_walls
 signal on_collision_enemy
+signal on_get_item
 
 var RielgunBullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
@@ -48,15 +49,20 @@ func _physics_process(delta):
 	_read_input()
 	
 	if self._velocity.x != 0 or self._velocity.y != 0:
+		var lastPosition = self.position
 		self.position += self._velocity * delta
-		
+		if self.position.x >= get_viewport().size.x or self.position.x < 0 or self.position.y < 0 or self.position.y >= get_viewport().size.y:
+			self.position = lastPosition
+
 	for collider in get_overlapping_bodies():
 		if collider.collision_layer == 1 || collider.collision_layer == 2:
 			if not self.invulnerable:
 				if collider.collision_layer == 1:
-					emit_signal(\"on_collision_walls\", collision)
+					emit_signal(\"on_collision_walls\", collider)
 				elif collider.collision_layer == 2:
-					emit_signal(\"on_collision_enemy\", collision)
+					emit_signal(\"on_collision_enemy\", collider)
+		if collider.collision_layer == 8:
+			emit_signal(\"on_get_item\", collider)
 	
 	\"\"\"
 	if self._velocity.x != 0 or self._velocity.y != 0:
@@ -76,14 +82,11 @@ func set_invulnerable(seconds):
 	self.timerInvulnerable.start(seconds)
 	self.invulnerable = true
 	self.playerAnimation.play(\"invulnerable\")
-	self.collision.disabled = true
 
 func _on_TimerInvulnerable_timeout():
 	self.invulnerable = false
 	self.playerAnimation.stop()
 	visible = true
-	self.collision.disabled = false
-
 "
 
 [sub_resource type="Animation" id=3]
