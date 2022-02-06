@@ -8,7 +8,7 @@ script/source = "extends Area2D
 
 signal on_collision_walls
 
-var RielgunBullet = preload(\"res://scenes/bullets/Bullet.tscn\")
+var Bullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
 onready var animation := $Sprite/AnimationPlayer
 onready var timerInvulnerable := $TimerInvulnerable
@@ -39,18 +39,16 @@ func _read_input():
 	if Input.is_action_pressed(\"down\"):
 		self._velocity.y += 1
 	if Input.is_action_pressed(\"fire\"):
-		var bullet = RielgunBullet.instance()
+		var bullet = Bullet.instance()
+		bullet.create(self, Global.BulletType.BULLET_MISSILE)
 		if bullet.can_fire(self._lastShot):
-			bullet.create(self)
 			get_parent().add_child(bullet)
+			bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
 			self._lastShot = OS.get_ticks_msec()
 	
 	self._velocity = self._velocity.normalized() * self.speed
 
 func _process(delta):
-	if Input.is_action_just_pressed(\"ui_accept\"):
-		explode()
-	
 	pass
 
 func _physics_process(delta):
@@ -77,10 +75,6 @@ func _on_TimerInvulnerable_timeout():
 	self.invulnerable = false
 	self.playerAnimation.stop()
 	visible = true
-
-func explode():
-	self.explosion.visible = true
-	self.explosion.explode()
 "
 
 [sub_resource type="Animation" id=3]

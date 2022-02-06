@@ -7,6 +7,11 @@ enum ItemType {
 	ITEM_MISSILE
 }
 
+enum BulletType {
+	BULLET_RIELGUN,
+	BULLET_MISSILE
+}
+
 enum ExplosionType {
 	EXPLOSION_YELLOW_LARGE,
 	EXPLOSION_YELLOW_MEDIUM,

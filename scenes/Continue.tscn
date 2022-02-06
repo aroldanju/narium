@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
 [ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/explosions/ExplosionLarge.tscn" type="PackedScene" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -86,9 +85,6 @@ size_flags_vertical = 3
 visible = false
 
 [node name="Timer" type="Timer" parent="."]
-
-[node name="Explosion" parent="." instance=ExtResource( 3 )]
-position = Vector2( 160, 104 )
 
 [connection signal="on_fade_in_finish" from="Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

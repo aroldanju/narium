@@ -8,6 +8,7 @@ func get_class(): return "Asteroid"
 
 onready var sprite := $Sprite
 onready var collision := $CollisionPolygon2D
+onready var animationHit := $AnimationPlayer
 
 export(float) var rotationSpeed = 10.0
 export(float) var movementSpeed = 50.0
@@ -21,4 +22,8 @@ func _process(delta):
 	self.position += self.velocity.normalized() * self.movementSpeed * delta
 
 func _on_AsteroidEnemy_area_entered(area):
-	emit_signal("on_collision", self, area)
+	if area.get_class() != "Bullet":
+		emit_signal("on_collision", self, area)
+
+func hit():
+	self.animationHit.play("hit")
