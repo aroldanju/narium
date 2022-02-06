@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/images/player.png" type="Texture" id=1]
+[ext_resource path="res://scenes/explosions/ExplosionLarge.tscn" type="PackedScene" id=2]
 
 [sub_resource type="GDScript" id=4]
 script/source = "extends Area2D
@@ -13,6 +14,7 @@ onready var animation := $Sprite/AnimationPlayer
 onready var timerInvulnerable := $TimerInvulnerable
 onready var playerAnimation := $AnimationPlayer
 onready var collision := $CollisionShape2D
+onready var explosion := $Explosion
 
 export(float) var speed = 200.0
 export(bool) var invulnerable = false
@@ -46,6 +48,9 @@ func _read_input():
 	self._velocity = self._velocity.normalized() * self.speed
 
 func _process(delta):
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		explode()
+	
 	pass
 
 func _physics_process(delta):
@@ -72,6 +77,10 @@ func _on_TimerInvulnerable_timeout():
 	self.invulnerable = false
 	self.playerAnimation.stop()
 	visible = true
+
+func explode():
+	self.explosion.visible = true
+	self.explosion.explode()
 "
 
 [sub_resource type="Animation" id=3]
@@ -141,5 +150,8 @@ anims/invulnerable = SubResource( 5 )
 
 [node name="TimerInvulnerable" type="Timer" parent="."]
 one_shot = true
+
+[node name="Explosion" parent="." instance=ExtResource( 2 )]
+visible = false
 
 [connection signal="timeout" from="TimerInvulnerable" to="." method="_on_TimerInvulnerable_timeout"]

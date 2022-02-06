@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/explosions/ExplosionLarge.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var transition := $Control/Transition
+onready var label := $Control/VBoxContainer/LabelContinue
+onready var timer := $Timer
+
+var seconds = 9
+
+func _ready():
+	self.transition.fade_in()
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		_on_continue()
+
+func _on_continue():
+	self.timer.stop()
+
+func _on_gameover():
+	self.label.visible = false
+	self.timer.stop()
+
+func _on_Timer_timeout():
+	self.seconds -= 1
+	
+	if self.seconds == -1:
+		_on_gameover()
+	else:
+		self.label.text = \"CONTINUE \" + String(self.seconds)
+
+func _on_Transition_on_fade_in_finish():
+	self.timer.start()
+"
+
+[node name="Continue" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+margin_right = 480.0
+margin_bottom = 270.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="ColorRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer"]
+margin_right = 480.0
+margin_bottom = 126.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelContinue" type="Label" parent="Control/VBoxContainer"]
+margin_top = 130.0
+margin_right = 480.0
+margin_bottom = 140.0
+text = "CONTINUE 9"
+align = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/VBoxContainer"]
+margin_top = 144.0
+margin_right = 480.0
+margin_bottom = 270.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Transition" parent="Control" instance=ExtResource( 2 )]
+visible = false
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Explosion" parent="." instance=ExtResource( 3 )]
+position = Vector2( 160, 104 )
+
+[connection signal="on_fade_in_finish" from="Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

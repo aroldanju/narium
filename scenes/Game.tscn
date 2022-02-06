@@ -11,6 +11,8 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+var Explosion = preload(\"res://scenes/explosions/ExplosionLarge.tscn\")
+
 onready var transition := $CanvasLayer/Control/Transition
 onready var player := $Player
 onready var labelLevel := $CanvasLayer/Control/LabelLevel
@@ -25,6 +27,12 @@ func _ready():
 
 func _input(event):
 	pass
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"add_live\"):
+		if Global.DEVELOPMENT:
+			Global.lives += 1
+			self.hud.set_lives(Global.lives)
 
 func _on_Transition_on_fade_out_finish():
 	pass
@@ -43,8 +51,8 @@ func hit_player():
 func start():
 	self.player.position = Vector2(72, 134)
 	self.labelLevelAnimation.play(\"fade_in\")
-	self.hud.create(Global.highscore, Global.credits, Global.players.size())
-	self.player.set_invulnerable(3.0)
+	self.hud.create(Global.highscore, Global.lives, Global.players.size())
+	self.player.set_invulnerable(0)
 
 func _on_Player_on_collision_walls(wall):
 	start()
@@ -56,6 +64,12 @@ func add_beam(player, amount):
 
 func _on_LevelAsteroids_on_enemy_collision(enemy, player):
 	if not player.invulnerable:
+		# Player explosion
+		var explosionInstance = Explosion.instance()
+		explosionInstance.set_type(Global.ExplosionType.EXPLOSION_YELLOW_LARGE)
+		explosionInstance.position = player.position - $LevelAsteroids/TileMap.position
+		explosionInstance.explode()
+		$LevelAsteroids/TileMap.add_child(explosionInstance)
 		start()
 
 func _on_LevelAsteroids_on_item_collision(item, player):

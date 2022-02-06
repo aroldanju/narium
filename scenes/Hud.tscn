@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
 [ext_resource path="res://scenes/BeamBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/images/live.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends VBoxContainer
@@ -11,19 +12,19 @@ onready var scorePlayer2 := $ScoreContainer/Player2Score/LabelScore
 onready var scoreHigh := $ScoreContainer/HiScore/LabelScore
 onready var beamPlayer1 := $HBoxContainer/BeamBar1
 onready var beamPlayer2 := $HBoxContainer/BeamBar2
-onready var credits := $HBoxContainer/LabelCredits
+onready var lives := $HBoxContainer/LabelLives
 onready var animationScorePlayer1 := $ScoreContainer/Player1Score/LabelScore/AnimationPlayer
 onready var animationScorePlayer2 := $ScoreContainer/Player2Score/LabelScore/AnimationPlayer
 
 func _ready():
 	pass
 
-func create(highscore, credits, players):
+func create(highscore, lives, players):
 	set_score(1, 0)
 	if players == 1:
 		disable_player(2)
 	
-	set_credits(credits)
+	set_lives(lives)
 	set_highscore(highscore)
 
 func set_highscore(score):
@@ -45,8 +46,8 @@ func set_beam_amount(player, amount):
 		2:
 			self.beamPlayer2.set_current_value(amount)
 
-func set_credits(credits):
-	self.credits.text = \"CREDITS: \" + String(credits)
+func set_lives(lives):
+	self.lives.text = \"x\" + String(lives)
 
 func disable_player(player):
 	match player:
@@ -221,20 +222,28 @@ margin_bottom = 10.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
 margin_left = 137.0
-margin_right = 204.0
+margin_right = 218.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LabelCredits" type="Label" parent="HBoxContainer"]
-margin_left = 208.0
-margin_right = 269.0
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+margin_left = 222.0
+margin_top = 1.0
+margin_right = 237.0
+margin_bottom = 9.0
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+
+[node name="LabelLives" type="Label" parent="HBoxContainer"]
+margin_left = 241.0
+margin_right = 256.0
 margin_bottom = 10.0
-text = "CREDITS: 3"
+text = "x2"
 
 [node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer"]
-margin_left = 273.0
+margin_left = 260.0
 margin_right = 341.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 0 )
