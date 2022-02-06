@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
+[ext_resource path="res://assets/images/portrait.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/background_menu.png" type="Texture" id=3]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer"]
+margin_right = 480.0
+margin_bottom = 196.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
+margin_top = 200.0
+margin_right = 480.0
+margin_bottom = 266.0
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer"]
+margin_right = 10.0
+margin_bottom = 66.0
+rect_min_size = Vector2( 10, 0 )
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer"]
+margin_left = 14.0
+margin_right = 466.0
+margin_bottom = 66.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 451.0
+margin_bottom = 65.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
+margin_left = 68.0
+margin_right = 450.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. "
+autowrap = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer"]
+margin_left = 470.0
+margin_right = 480.0
+margin_bottom = 66.0
+rect_min_size = Vector2( 10, 0 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer"]
+margin_top = 270.0
+margin_right = 480.0
+margin_bottom = 270.0

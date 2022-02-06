@@ -1,0 +1,228 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/images/background_menu.png" type="Texture" id=3]
+[ext_resource path="res://assets/images/portrait.png" type="Texture" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var labelIntro := $CanvasLayer/Control/HBoxContainer/Label
+onready var animationIntro := $CanvasLayer/Control/HBoxContainer/AnimationPlayer
+onready var transition := $CanvasLayer/Control/Transition
+onready var tweenIntro := $CanvasLayer/Control/HBoxContainer/Label/Tween
+onready var dialogContainer := $CanvasLayer/Control/DialogContainer
+onready var dialogAnimation := $CanvasLayer/Control/DialogContainer/AnimationPlayer
+onready var labelSkip := $CanvasLayer/Control/LabelSkip
+onready var animationSkip := $CanvasLayer/Control/LabelSkip/AnimationPlayer
+
+var intro = true
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		if self.intro:
+			self.animationIntro.stop()
+			self.labelIntro.percent_visible = 1
+			self.labelIntro.visible = true
+			self.intro = false
+			_start_intro_tween()
+
+func _ready():
+	self.animationSkip.play(\"blink\")
+	self.dialogContainer.visible = false
+	self.transition.fade_in()
+	self.animationIntro.play(\"history\")
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	_start_intro_tween()
+
+func _start_intro_tween():
+	self.tweenIntro.interpolate_property(self.labelIntro, \"modulate\", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 3, Tween.TRANS_BACK, Tween.EASE_IN)
+	self.tweenIntro.start()
+
+func _on_Tween_tween_completed(object, key):
+	self.animationSkip.stop()
+	self.labelSkip.visible = false
+	self.dialogAnimation.play(\"dialog\")
+	self.dialogContainer.visible = true
+"
+
+[sub_resource type="Animation" id=2]
+resource_name = "history"
+length = 13.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Label:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 10, 13 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "dialog"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("HBoxContainer/Label:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 1, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "blink"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[node name="Intro" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -0.000366211
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/HBoxContainer"]
+margin_right = 111.0
+margin_bottom = 269.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/HBoxContainer"]
+margin_left = 115.0
+margin_top = 38.0
+margin_right = 365.0
+margin_bottom = 230.0
+rect_min_size = Vector2( 250, 0 )
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. 
+Nulla pretium semper diam, at ultrices felis fringilla in. Vivamus lorem odio, gravida eget hendrerit faucibus, mattis nec metus. Nam eget finibus tellus. 
+
+Cras purus turpis, eleifend aliquet pulvinar ac, eleifend eu justo. Aenean quam elit, sodales molestie tellus in, suscipit luctus risus. "
+align = 1
+autowrap = true
+percent_visible = 0.0
+
+[node name="Tween" type="Tween" parent="CanvasLayer/Control/HBoxContainer/Label"]
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/HBoxContainer"]
+margin_left = 369.0
+margin_right = 480.0
+margin_bottom = 269.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/HBoxContainer"]
+anims/history = SubResource( 2 )
+
+[node name="Transition" parent="CanvasLayer/Control" instance=ExtResource( 2 )]
+visible = false
+
+[node name="DialogContainer" type="HBoxContainer" parent="CanvasLayer/Control"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -96.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/DialogContainer"]
+margin_right = 10.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 10, 0 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/DialogContainer"]
+margin_left = 14.0
+margin_right = 466.0
+margin_bottom = 96.0
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/DialogContainer/HBoxContainer"]
+margin_right = 64.0
+margin_bottom = 96.0
+texture = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/DialogContainer/HBoxContainer"]
+margin_left = 68.0
+margin_top = 36.0
+margin_right = 452.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+text = "Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. "
+valign = 1
+autowrap = true
+percent_visible = 0.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/DialogContainer"]
+margin_left = 470.0
+margin_right = 480.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 10, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/DialogContainer"]
+playback_speed = 0.5
+anims/dialog = SubResource( 3 )
+
+[node name="LabelSkip" type="Label" parent="CanvasLayer/Control"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -36.0
+text = "
+PRESS START TO SKIP...
+"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/LabelSkip"]
+anims/blink = SubResource( 4 )
+
+[connection signal="tween_completed" from="CanvasLayer/Control/HBoxContainer/Label/Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="animation_finished" from="CanvasLayer/Control/HBoxContainer/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

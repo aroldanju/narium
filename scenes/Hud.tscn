@@ -46,7 +46,7 @@ func set_beam_amount(player, amount):
 			self.beamPlayer2.set_current_value(amount)
 
 func set_credits(credits):
-	self.credits.text = \"Credits: \" + String(credits)
+	self.credits.text = \"CREDITS: \" + String(credits)
 
 func disable_player(player):
 	match player:
