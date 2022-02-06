@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
 [ext_resource path="res://assets/images/portrait.png" type="Texture" id=2]
 [ext_resource path="res://assets/images/background_menu.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Planet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=5]
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node2D
@@ -12,9 +13,19 @@ onready var dialogString := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Pan
 onready var dialogAnimation := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog/AnimationPlayer
 onready var continueLabel := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer/LabelContinue
 onready var continueAnimation := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer/LabelContinue/AnimationPlayer
+onready var planet := $Planet
+onready var planetNameAnimation := $CanvasLayer/Control/VBoxContainer/Label/AnimationPlayer
+onready var animationZoom := $Planet/AnimationZoom
+onready var transition := $CanvasLayer/Control/Transition
+onready var uiContainer := $CanvasLayer/Control/VBoxContainer
 
 func _ready():
+	self.planetNameAnimation.play(\"blink\")
+	set_planet(load(\"res://assets/images/planet.png\"))
 	show_dialog(\"Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.\")
+
+func set_planet(planet):
+	self.planet.set_texture(planet)
 
 func _process(delta):
 	if Input.is_action_just_pressed(\"ui_accept\"):
@@ -35,8 +46,33 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	self.continueAnimation.play(\"blink\")
 
 func _next_dialog():
-	print(\"NEXT DIALOG\")
+	_zoom_to_planet()
+
+func _zoom_to_planet():
+	self.animationZoom.play(\"zoom\")
+	self.transition.fade_out()
+	self.uiContainer.visible = false
+
+func _on_Transition_on_fade_out_finish():
+	get_tree().change_scene(\"res://scenes/Game.tscn\")
 "
+
+[sub_resource type="Animation" id=4]
+resource_name = "blink"
+length = 1.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 1.5 ),
+"transitions": PoolRealArray( 6.06286, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "dialog"
@@ -71,6 +107,21 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
+[sub_resource type="Animation" id=5]
+resource_name = "zoom"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.34151, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 5, 5 ) ]
+}
+
 [node name="StageStart" type="Node2D"]
 script = SubResource( 3 )
 
@@ -103,6 +154,9 @@ margin_right = 480.0
 margin_bottom = 177.0
 text = "PLANET NAME"
 align = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/VBoxContainer/Label"]
+anims/blink = SubResource( 4 )
 
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer"]
 margin_top = 181.0
@@ -150,10 +204,10 @@ rect_min_size = Vector2( 5, 0 )
 
 [node name="LabelDialog" type="Label" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
 margin_left = 77.0
+margin_top = 20.0
 margin_right = 441.0
-margin_bottom = 23.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
-size_flags_vertical = 0
 text = "Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. "
 autowrap = true
 percent_visible = 0.0
@@ -224,11 +278,21 @@ margin_top = 270.0
 margin_right = 480.0
 margin_bottom = 270.0
 
+[node name="Transition" parent="CanvasLayer/Control" instance=ExtResource( 5 )]
+visible = false
+time = 2.0
+
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 240, 136 )
+position = Vector2( 240, 135 )
 texture = ExtResource( 3 )
 
 [node name="Planet" parent="." instance=ExtResource( 4 )]
 position = Vector2( 240, 96 )
+region_rect = Rect2( 0, 0, 1, 1 )
+
+[node name="AnimationZoom" type="AnimationPlayer" parent="Planet"]
+playback_speed = 0.5
+anims/zoom = SubResource( 5 )
 
 [connection signal="animation_finished" from="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]
