@@ -1,10 +1,78 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
 [ext_resource path="res://assets/images/portrait.png" type="Texture" id=2]
 [ext_resource path="res://assets/images/background_menu.png" type="Texture" id=3]
+[ext_resource path="res://scenes/Planet.tscn" type="PackedScene" id=4]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node2D
+
+onready var dialogString := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog
+onready var dialogAnimation := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog/AnimationPlayer
+onready var continueLabel := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer/LabelContinue
+onready var continueAnimation := $CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer/LabelContinue/AnimationPlayer
+
+func _ready():
+	show_dialog(\"Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.\")
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		if self.dialogAnimation.is_playing():
+			self.dialogAnimation.stop()
+			self.dialogString.percent_visible = 1
+			_on_AnimationPlayer_animation_finished(\"dialog\")
+		else:
+			_next_dialog()
+
+func show_dialog(s):
+	self.continueLabel.visible = false
+	self.dialogString.text = s
+	self.dialogAnimation.play(\"dialog\")
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	self.continueLabel.visible = true
+	self.continueAnimation.play(\"blink\")
+
+func _next_dialog():
+	print(\"NEXT DIALOG\")
+"
+
+[sub_resource type="Animation" id=1]
+resource_name = "dialog"
+length = 6.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "blink"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="StageStart" type="Node2D"]
+script = SubResource( 3 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -16,11 +84,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-texture = ExtResource( 3 )
-
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,9 +93,23 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer"]
 margin_right = 480.0
-margin_bottom = 196.0
+margin_bottom = 163.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+margin_top = 167.0
+margin_right = 480.0
+margin_bottom = 177.0
+text = "PLANET NAME"
+align = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer"]
+margin_top = 181.0
+margin_right = 480.0
+margin_bottom = 196.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
 margin_top = 200.0
@@ -65,14 +142,76 @@ margin_right = 64.0
 margin_bottom = 64.0
 texture = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
 margin_left = 68.0
-margin_right = 450.0
+margin_right = 73.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 5, 0 )
+
+[node name="LabelDialog" type="Label" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
+margin_left = 77.0
+margin_right = 441.0
 margin_bottom = 23.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. "
 autowrap = true
+percent_visible = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog"]
+anims/dialog = SubResource( 1 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer"]
+margin_left = 445.0
+margin_right = 450.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 5, 0 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 451.0
+margin_bottom = 65.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2"]
+margin_right = 427.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2"]
+margin_left = 431.0
+margin_right = 436.0
+margin_bottom = 64.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer"]
+margin_right = 5.0
+margin_bottom = 41.0
+size_flags_vertical = 3
+
+[node name="LabelContinue" type="Label" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer"]
+margin_top = 45.0
+margin_right = 5.0
+margin_bottom = 55.0
+size_flags_horizontal = 0
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer/LabelContinue"]
+anims/blink = SubResource( 2 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2/VBoxContainer"]
+margin_top = 59.0
+margin_right = 5.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 0, 5 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer2"]
+margin_left = 440.0
+margin_right = 450.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 10, 0 )
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/VBoxContainer/HBoxContainer"]
 margin_left = 470.0
@@ -84,3 +223,12 @@ rect_min_size = Vector2( 10, 0 )
 margin_top = 270.0
 margin_right = 480.0
 margin_bottom = 270.0
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 240, 136 )
+texture = ExtResource( 3 )
+
+[node name="Planet" parent="." instance=ExtResource( 4 )]
+position = Vector2( 240, 96 )
+
+[connection signal="animation_finished" from="CanvasLayer/Control/VBoxContainer/HBoxContainer/Panel/HBoxContainer/LabelDialog/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

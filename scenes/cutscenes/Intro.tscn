@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/theme_default.tres" type="Theme" id=1]
 [ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/images/background_menu.png" type="Texture" id=3]
-[ext_resource path="res://assets/images/portrait.png" type="Texture" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -12,8 +11,6 @@ onready var labelIntro := $CanvasLayer/Control/HBoxContainer/Label
 onready var animationIntro := $CanvasLayer/Control/HBoxContainer/AnimationPlayer
 onready var transition := $CanvasLayer/Control/Transition
 onready var tweenIntro := $CanvasLayer/Control/HBoxContainer/Label/Tween
-onready var dialogContainer := $CanvasLayer/Control/DialogContainer
-onready var dialogAnimation := $CanvasLayer/Control/DialogContainer/AnimationPlayer
 onready var labelSkip := $CanvasLayer/Control/LabelSkip
 onready var animationSkip := $CanvasLayer/Control/LabelSkip/AnimationPlayer
 
@@ -30,7 +27,6 @@ func _process(delta):
 
 func _ready():
 	self.animationSkip.play(\"blink\")
-	self.dialogContainer.visible = false
 	self.transition.fade_in()
 	self.animationIntro.play(\"history\")
 
@@ -44,8 +40,8 @@ func _start_intro_tween():
 func _on_Tween_tween_completed(object, key):
 	self.animationSkip.stop()
 	self.labelSkip.visible = false
-	self.dialogAnimation.play(\"dialog\")
-	self.dialogContainer.visible = true
+
+	get_tree().change_scene(\"res://scenes/cutscenes/StageStart.tscn\")
 "
 
 [sub_resource type="Animation" id=2]
@@ -59,22 +55,6 @@ tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
 "times": PoolRealArray( 0, 10, 13 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ 0.0, 1.0, 1.0 ]
-}
-
-[sub_resource type="Animation" id=3]
-resource_name = "dialog"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("HBoxContainer/Label:percent_visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0.1, 1, 1.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ 0.0, 1.0, 1.0 ]
@@ -161,52 +141,6 @@ anims/history = SubResource( 2 )
 
 [node name="Transition" parent="CanvasLayer/Control" instance=ExtResource( 2 )]
 visible = false
-
-[node name="DialogContainer" type="HBoxContainer" parent="CanvasLayer/Control"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -96.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/DialogContainer"]
-margin_right = 10.0
-margin_bottom = 96.0
-rect_min_size = Vector2( 10, 0 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/DialogContainer"]
-margin_left = 14.0
-margin_right = 466.0
-margin_bottom = 96.0
-size_flags_horizontal = 3
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/DialogContainer/HBoxContainer"]
-margin_right = 64.0
-margin_bottom = 96.0
-texture = ExtResource( 4 )
-
-[node name="Label" type="Label" parent="CanvasLayer/Control/DialogContainer/HBoxContainer"]
-margin_left = 68.0
-margin_top = 36.0
-margin_right = 452.0
-margin_bottom = 59.0
-size_flags_horizontal = 3
-text = "Vivamus a tortor interdum, mattis ex vel, aliquet nibh. Donec feugiat pretium lorem vitae blandit. "
-valign = 1
-autowrap = true
-percent_visible = 0.0
-
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/DialogContainer"]
-margin_left = 470.0
-margin_right = 480.0
-margin_bottom = 96.0
-rect_min_size = Vector2( 10, 0 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Control/DialogContainer"]
-playback_speed = 0.5
-anims/dialog = SubResource( 3 )
 
 [node name="LabelSkip" type="Label" parent="CanvasLayer/Control"]
 anchor_top = 1.0
