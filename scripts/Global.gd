@@ -3,7 +3,8 @@ extends Node
 const DEVELOPMENT = true
 
 enum ItemType {
-	ITEM_BEAM
+	ITEM_BEAM,
+	ITEM_MISSILE
 }
 
 enum ExplosionType {

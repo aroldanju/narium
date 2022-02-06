@@ -20,4 +20,4 @@ func _process(delta):
 		_free_bullet()
 
 func _free_bullet():
-	get_parent().queue_free()
+	queue_free()
