@@ -47,7 +47,7 @@ func set_beam_amount(player, amount):
 			self.beamPlayer2.set_current_value(amount)
 
 func set_lives(lives):
-	self.lives.text = \"x\" + String(lives)
+	self.lives.text = \"LIVES: \" + String(lives)
 
 func disable_player(player):
 	match player:
@@ -222,13 +222,14 @@ margin_bottom = 10.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
 margin_left = 137.0
-margin_right = 218.0
+margin_right = 227.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+visible = false
 margin_left = 222.0
 margin_top = 1.0
 margin_right = 237.0
@@ -237,13 +238,13 @@ size_flags_vertical = 4
 texture = ExtResource( 3 )
 
 [node name="LabelLives" type="Label" parent="HBoxContainer"]
-margin_left = 241.0
-margin_right = 256.0
+margin_left = 231.0
+margin_right = 246.0
 margin_bottom = 10.0
 text = "x2"
 
 [node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer"]
-margin_left = 260.0
+margin_left = 250.0
 margin_right = 341.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 0 )

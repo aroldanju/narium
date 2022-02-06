@@ -9,7 +9,8 @@ enum ItemType {
 enum ExplosionType {
 	EXPLOSION_YELLOW_LARGE,
 	EXPLOSION_YELLOW_MEDIUM,
-	EXPLOSION_YELLOW_SMALL
+	EXPLOSION_YELLOW_SMALL,
+	EXPLOSION_HIT_YELLOW
 }
 
 var players = [PlayerStats.new()]
