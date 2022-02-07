@@ -14,6 +14,7 @@ export(Global.BulletType) var type = Global.BulletType.BULLET_RIELGUN
 
 var bulletOwner = null
 var velocity = Vector2(1.0, 0)
+var currentButllet = null
 
 func _ready():
 	pass
@@ -41,12 +42,28 @@ func can_fire(lastShoot):
 	return OS.get_ticks_msec() - lastShoot >= _get_bullet_node().rateOfFire
 
 func _apply_type():
-	_hide_all_bullets()
-	_get_bullet_node().visible = true
+	for child in get_children():
+		if not child.name == _get_bullet_node().name:
+			remove_child(child)
+	#_hide_all_bullets()
+	#_enable_bullet(_get_bullet_node())
 
 func _hide_all_bullets():
-	get_node_or_null(\"RielgunBullet\").visible = false
-	get_node_or_null(\"MissileBullet\").visible = false
+	for child in get_children():
+		if not child.name == _get_bullet_node().name:
+			remove_child(child)
+
+\"\"\"
+func _disable_bullet(bullet):
+	bullet.get_node(\"CollisionShape2D\").disabled = true
+	bullet.visible = false
+	bullet.set_process(false)
+
+func _enable_bullet(bullet):
+	bullet.get_node(\"CollisionShape2D\").disabled = false
+	bullet.visible = true
+	bullet.set_process(true)
+\"\"\"
 
 func _on_bullet_on_collision_enemy(bullet, enemy):
 	emit_signal(\"on_collision\", bullet, enemy)

@@ -1,0 +1,164 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/enemies/asteroids/AsteroidEnemyMedium1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/enemies/asteroids/AsteroidEnemyLarge1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/enemies/asteroids/AsteroidEnemySmall1.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+
+signal on_collision
+
+extends Node2D
+
+func get_class(): return \"Asteroid\"
+
+export(Global.AsteroidType) var type = Global.AsteroidType.ASTEROID_LARGE setget set_type, get_type
+export(Vector2) var velocity = Vector2(0, 0) setget set_velocity, get_velocity
+export(float) var rotationSpeed = 0.0 setget set_rotation_speed, get_rotation_speed
+export(float) var movementSpeed = 0.0 setget set_movement_speed, get_movement_speed
+
+onready var asteroidLarge := $AsteroidEnemyLarge1
+onready var asteroidMedium := $AsteroidEnemyMedium1
+onready var asteroidSmall := $AsteroidEnemySmall1
+
+var _currentAsteroid = null
+
+func _ready():
+	set_type(self.type)
+
+func set_velocity(v):
+	velocity = v
+	$AsteroidEnemyLarge1.velocity = v
+	$AsteroidEnemyMedium1.velocity = v
+	$AsteroidEnemySmall1.velocity = v
+
+func get_velocity():
+	return velocity
+
+func set_rotation_speed(s):
+	rotationSpeed = s
+	$AsteroidEnemyLarge1.rotationSpeed = s
+	$AsteroidEnemyMedium1.rotationSpeed = s
+	$AsteroidEnemySmall1.rotationSpeed = s
+
+func get_rotation_speed():
+	return rotationSpeed
+
+func set_movement_speed(s):
+	movementSpeed = s
+	$AsteroidEnemyLarge1.movementSpeed = s
+	$AsteroidEnemyMedium1.movementSpeed = s
+	$AsteroidEnemySmall1.movementSpeed = s
+
+func get_movement_speed():
+	return movementSpeed
+
+func get_type():
+	return type
+
+func set_type(t):
+	type = t
+	_apply_type()
+
+func _apply_type():
+	_hide_all_asteroids()
+	_enable_asteroid(self.type)
+
+func create(type):
+	set_type(type)
+
+func _hide_all_asteroids():
+	_disable_asteroid(Global.AsteroidType.ASTEROID_LARGE)
+	_disable_asteroid(Global.AsteroidType.ASTEROID_MEDIUM)
+	_disable_asteroid(Global.AsteroidType.ASTEROID_SMALL)
+
+func _on_asteroid_on_collision(asteroid, area):
+	emit_signal(\"on_collision\", self, area)
+
+func hit(damage):
+	var destroyed = self._currentAsteroid.hit(damage)
+	if destroyed:
+		_on_destroy_asteroid()
+	
+	return destroyed
+
+func _enable_asteroid(asteroid):
+	match asteroid:
+		Global.AsteroidType.ASTEROID_LARGE:
+			$AsteroidEnemyLarge1.visible = true
+			$AsteroidEnemyLarge1/CollisionPolygon2D.disabled = false
+			self._currentAsteroid = $AsteroidEnemyLarge1
+		Global.AsteroidType.ASTEROID_MEDIUM:
+			$AsteroidEnemyMedium1.visible = true
+			$AsteroidEnemyMedium1/CollisionPolygon2D.disabled = false
+			self._currentAsteroid = $AsteroidEnemyMedium1
+		Global.AsteroidType.ASTEROID_SMALL:
+			$AsteroidEnemySmall1.visible = true
+			$AsteroidEnemySmall1/CollisionPolygon2D.disabled = false
+			self._currentAsteroid = $AsteroidEnemySmall1
+
+func _disable_asteroid(asteroid):
+	match asteroid:
+		Global.AsteroidType.ASTEROID_LARGE:
+			$AsteroidEnemyLarge1.visible = false
+			$AsteroidEnemyLarge1/CollisionPolygon2D.disabled = true
+		Global.AsteroidType.ASTEROID_MEDIUM:
+			$AsteroidEnemyMedium1.visible = false
+			$AsteroidEnemyMedium1/CollisionPolygon2D.disabled = true
+		Global.AsteroidType.ASTEROID_SMALL:
+			$AsteroidEnemySmall1.visible = false
+			$AsteroidEnemySmall1/CollisionPolygon2D.disabled = true
+
+func _on_asteroid_on_free(asteroid):
+	pass
+	#asteroid.queue_free()
+
+func _on_destroy_asteroid():
+	match self.type:
+		Global.AsteroidType.ASTEROID_SMALL:
+			pass
+		Global.AsteroidType.ASTEROID_MEDIUM:
+			for i in 2 + randi() % 3:
+				var part = load(\"res://scenes/enemies/AsteroidEnemy.tscn\").instance()
+				part.position = self.position
+				part.velocity = Vector2(rand_range(-1.0, 0.2), rand_range(-1.0, 1.0))
+				part.movementSpeed = 10 + (randi() % 20)
+				part.rotationSpeed = 10 + (randi() % 100)
+				part.set_type(Global.AsteroidType.ASTEROID_SMALL)
+				get_parent().call_deferred(\"add_child\", part)
+				part.connect(\"on_collision\", get_parent(), \"_on_enemy_collision\")
+		Global.AsteroidType.ASTEROID_LARGE:
+			for i in 2 + randi() % 3:
+				var part = load(\"res://scenes/enemies/AsteroidEnemy.tscn\").instance()
+				part.position = self.position
+				part.velocity = Vector2(rand_range(-1.0, 0.2), rand_range(-1.0, 1.0))
+				part.movementSpeed = 10 + (randi() % 20)
+				part.rotationSpeed = 10 + (randi() % 100)
+				part.set_type(Global.AsteroidType.ASTEROID_MEDIUM)
+				get_parent().call_deferred(\"add_child\", part)
+				part.connect(\"on_collision\", get_parent(), \"_on_enemy_collision\")
+"
+
+[node name="AsteroidEnemy" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="AsteroidEnemyLarge1" parent="." instance=ExtResource( 2 )]
+strength = 8.0
+
+[node name="AsteroidEnemyMedium1" parent="." instance=ExtResource( 1 )]
+visible = false
+type = 1
+strength = 4.0
+
+[node name="AsteroidEnemySmall1" parent="." instance=ExtResource( 3 )]
+visible = false
+type = 2
+strength = 1.0
+
+[connection signal="on_collision" from="AsteroidEnemyLarge1" to="." method="_on_asteroid_on_collision"]
+[connection signal="on_free" from="AsteroidEnemyLarge1" to="." method="_on_asteroid_on_free"]
+[connection signal="on_collision" from="AsteroidEnemyMedium1" to="." method="_on_asteroid_on_collision"]
+[connection signal="on_free" from="AsteroidEnemyMedium1" to="." method="_on_asteroid_on_free"]
+[connection signal="on_collision" from="AsteroidEnemySmall1" to="." method="_on_asteroid_on_collision"]
+[connection signal="on_free" from="AsteroidEnemySmall1" to="." method="_on_asteroid_on_free"]

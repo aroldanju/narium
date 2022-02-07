@@ -19,6 +19,12 @@ enum ExplosionType {
 	EXPLOSION_HIT_YELLOW
 }
 
+enum AsteroidType {
+	ASTEROID_LARGE,
+	ASTEROID_MEDIUM,
+	ASTEROID_SMALL
+}
+
 var players = [PlayerStats.new()]
 var lives: int = 2
 var highscore: int = 150000

@@ -19,13 +19,13 @@ func _process(delta):
 	
 	self.rotation = self.velocity.angle()
 
-	if self.position.x >= get_viewport().size.x:
+	if self.global_position.x >= 480 + 50:
 		_free_bullet()
-	elif self.position.x < 0:
+	elif self.global_position.x < -50:
 		_free_bullet()
-	elif self.position.y < 0:
+	elif self.global_position.y < -50:
 		_free_bullet()
-	elif self.position.y >= get_viewport().size.y:
+	elif self.global_position.y >= 270 + 50:
 		_free_bullet()
 
 func _free_bullet():
@@ -40,3 +40,13 @@ func _on_bullet_body_entered(body):
 	# Level walls collision
 	emit_signal("on_collision_wall", self, body)
 	_free_bullet()
+
+func disable():
+	$CollisionShape2D.disabled = true
+	visible = true
+	set_process(false)
+
+func enable():
+	$CollisionShape2D.disabled = false
+	visible = true
+	set_process(true)

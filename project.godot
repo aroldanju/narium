@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Area2D",
 "class": "Asteroid",
 "language": "GDScript",
-"path": "res://scenes/enemies/AsteroidBehavior.gd"
+"path": "res://scenes/enemies/asteroids/AsteroidBehavior.gd"
 }, {
 "base": "Node2D",
 "class": "Explosion",
@@ -87,6 +87,12 @@ add_live={
 2d_physics/layer_3="player"
 2d_physics/layer_4="items"
 2d_physics/layer_5="bullets"
+
+[narium]
+
+scores/small_asteroid=100
+scores/medium_asteroid=100
+scores/large_asteroid=100
 
 [physics]
 
