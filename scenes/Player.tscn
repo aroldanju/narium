@@ -8,6 +8,8 @@ script/source = "extends Area2D
 
 signal on_collision_walls
 
+func get_class(): return \"Player\"
+
 var Bullet = preload(\"res://scenes/bullets/Bullet.tscn\")
 
 onready var animation := $Sprite/AnimationPlayer

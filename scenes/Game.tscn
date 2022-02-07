@@ -112,7 +112,7 @@ func create_explosion(type, position):
 	explosionInstance.position = position
 	explosionInstance.explode()
 	
-	$LevelAsteroids/TileMap.add_child(explosionInstance)
+	$LevelAsteroids.add_child(explosionInstance)
 
 func _on_TimerFps_timeout():
 	pass

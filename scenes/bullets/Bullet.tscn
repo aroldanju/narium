@@ -53,18 +53,6 @@ func _hide_all_bullets():
 		if not child.name == _get_bullet_node().name:
 			remove_child(child)
 
-\"\"\"
-func _disable_bullet(bullet):
-	bullet.get_node(\"CollisionShape2D\").disabled = true
-	bullet.visible = false
-	bullet.set_process(false)
-
-func _enable_bullet(bullet):
-	bullet.get_node(\"CollisionShape2D\").disabled = false
-	bullet.visible = true
-	bullet.set_process(true)
-\"\"\"
-
 func _on_bullet_on_collision_enemy(bullet, enemy):
 	emit_signal(\"on_collision\", bullet, enemy)
 
