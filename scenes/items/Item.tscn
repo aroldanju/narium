@@ -36,9 +36,11 @@ func _apply_type():
 		Global.ItemType.ITEM_BEAM:
 			self._currentItem = self.itemBeam
 			$ItemBeam.visible = true
+			$ItemBeam/CollisionShape2D.disabled = false
 		Global.ItemType.ITEM_MISSILE:
 			self._currentItem = self.itemMissile
 			$ItemMissile.visible = true
+			$ItemMissile/CollisionShape2D.disabled = false
 		_:
 			print(\"[Item::create]: unknown item type: \" + String(self.type))
 
@@ -47,7 +49,9 @@ func create(type):
 
 func _hide_all_items():
 	$ItemBeam.visible = false
+	$ItemBeam/CollisionShape2D.disabled = true
 	$ItemMissile.visible = false
+	$ItemMissile/CollisionShape2D.disabled = true
 	#self.itemBeam.visible = false
 	#self.itemMissile.visible = false
 

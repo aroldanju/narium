@@ -351,3 +351,6 @@ position = Vector2( 528, 84 )
 rotation = 1.96
 type = 1
 rotationSpeed = 20.0
+
+[node name="Item2" parent="." instance=ExtResource( 5 )]
+position = Vector2( 408, 84 )

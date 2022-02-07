@@ -18,9 +18,11 @@ onready var explosion := $Explosion
 
 export(float) var speed = 200.0
 export(bool) var invulnerable = false
+export(int) var id = 0
 
+var weapons = []
 var _velocity = Vector2()
-var _lastShot = 0
+var lastShot = []
 
 var tilemap = null
 
@@ -30,21 +32,45 @@ func _ready():
 func _read_input():
 	self._velocity = Vector2()
 	
-	if Input.is_action_pressed(\"left\"):
-		self._velocity.x += -1
-	if Input.is_action_pressed(\"right\"):
-		self._velocity.x += 1
-	if Input.is_action_pressed(\"up\"):
-		self._velocity.y += -1
-	if Input.is_action_pressed(\"down\"):
-		self._velocity.y += 1
-	if Input.is_action_pressed(\"fire\"):
-		var bullet = Bullet.instance()
-		bullet.create(self, Global.BulletType.BULLET_RIELGUN)
-		if bullet.can_fire(self._lastShot):
-			get_parent().add_child(bullet)
-			bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
-			self._lastShot = OS.get_ticks_msec()
+	match self.id:
+		1:
+			if Input.is_action_pressed(\"1up_left\"):
+				self._velocity.x += -1
+			if Input.is_action_pressed(\"1up_right\"):
+				self._velocity.x += 1
+			if Input.is_action_pressed(\"1up_up\"):
+				self._velocity.y += -1
+			if Input.is_action_pressed(\"1up_down\"):
+				self._velocity.y += 1
+			if Input.is_action_pressed(\"1up_fire\"):
+				shot()
+				\"\"\"
+				var bullet = Bullet.instance()
+				bullet.create(self, Global.BulletType.BULLET_RIELGUN)
+				if bullet.can_fire(self._lastShot):
+					get_parent().add_child(bullet)
+					bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
+					self._lastShot = OS.get_ticks_msec()
+				\"\"\"
+		2:
+			if Input.is_action_pressed(\"2up_left\"):
+				self._velocity.x += -1
+			if Input.is_action_pressed(\"2up_right\"):
+				self._velocity.x += 1
+			if Input.is_action_pressed(\"2up_up\"):
+				self._velocity.y += -1
+			if Input.is_action_pressed(\"2up_down\"):
+				self._velocity.y += 1
+			if Input.is_action_pressed(\"2up_fire\"):
+				shot()
+				\"\"\"
+				var bullet = Bullet.instance()
+				bullet.create(self, Global.BulletType.BULLET_RIELGUN)
+				if bullet.can_fire(self._lastShot):
+					get_parent().add_child(bullet)
+					bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
+					self._lastShot = OS.get_ticks_msec()
+				\"\"\"
 	
 	self._velocity = self._velocity.normalized() * self.speed
 
@@ -64,7 +90,7 @@ func _physics_process(delta):
 		if collider.collision_layer == 1:
 			if not self.invulnerable:
 				if collider.collision_layer == 1:
-					emit_signal(\"on_collision_walls\", collider)
+					emit_signal(\"on_collision_walls\", self, collider)
 
 func set_invulnerable(seconds):
 	self.timerInvulnerable.start(seconds)
@@ -75,6 +101,40 @@ func _on_TimerInvulnerable_timeout():
 	self.invulnerable = false
 	self.playerAnimation.stop()
 	visible = true
+
+func add_weapon(weapon):
+	var index = self.weapons.find(weapon)
+	if index == -1:
+		self.weapons.append(weapon)
+		self.lastShot.append(0)
+
+func shot():
+	if self.weapons.empty():
+		return
+		
+	for i in range(self.weapons.size()):
+		var bullet = _create_bullet_by_weapon(self.weapons[i])
+		if bullet:
+			if bullet.can_fire(self.lastShot[i]):
+				get_parent().add_child(bullet)
+				bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
+				self.lastShot[i] = OS.get_ticks_msec()
+		
+func _create_bullet_by_weapon(weapon):
+	var bulletType = Global.BulletType.BULLET_RIELGUN
+	
+	match weapon:
+		Global.WeaponType.WEAPON_MISSILE:
+			bulletType = Global.BulletType.BULLET_MISSILE
+		Global.WeaponType.WEAPON_RIELGUN:
+			bulletType = Global.BulletType.BULLET_RIELGUN
+		_:
+			return null
+	
+	var bullet = Bullet.instance()
+	bullet.create(self, bulletType)
+	
+	return bullet
 "
 
 [sub_resource type="Animation" id=3]

@@ -25,6 +25,11 @@ enum AsteroidType {
 	ASTEROID_SMALL
 }
 
+enum WeaponType {
+	WEAPON_RIELGUN,
+	WEAPON_MISSILE
+}
+
 var players = [PlayerStats.new()]
 var lives: int = 2
 var highscore: int = 150000

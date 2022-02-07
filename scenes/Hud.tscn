@@ -35,7 +35,6 @@ func set_score(player, score):
 	
 	match player:
 		1:
-			print(\"SCORE\")
 			self.scorePlayer1.text = scoreString
 		2:
 			self.scorePlayer2.text = scoreString

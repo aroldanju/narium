@@ -14,7 +14,8 @@ script/source = "extends Node2D
 var Explosion = preload(\"res://scenes/explosions/ExplosionLarge.tscn\")
 
 onready var transition := $CanvasLayer/Control/Transition
-onready var player := $Player
+onready var player1 := $Player1
+onready var player2 := $Player2
 onready var labelLevel := $CanvasLayer/Control/LabelLevel
 onready var labelLevelAnimation := $CanvasLayer/Control/LabelLevel/AnimationPlayer
 onready var hud := $CanvasLayer/Control/Hud
@@ -42,12 +43,6 @@ func _on_Transition_on_fade_out_finish():
 func _on_Transition_on_fade_in_finish():
 	start()
 
-\"\"\"
-func _on_LevelAsteroids_on_collision(collision):
-	if collision.collider == self.player:
-		hit_player()
-\"\"\"
-
 func _on_bullet_collision(bullet, body):
 	create_explosion(Global.ExplosionType.EXPLOSION_HIT_YELLOW, bullet.global_position - $LevelAsteroids.position)
 	if body.get_class() == \"Asteroid\":
@@ -55,14 +50,14 @@ func _on_bullet_collision(bullet, body):
 			Global.players[0].score += body.score
 			self.hud.set_score(1, Global.players[0].score)
 
-func hit_player():
-	if not self.player.invulnerable:
+func hit_player(player):
+	if not player.invulnerable:
 		Global.lives -= 1
 		create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, player.global_position - $LevelAsteroids.position)
 		if Global.lives == -1:
 			game_over()
 		else:
-			start()
+			start_player(player)
 
 func game_over():
 	$LevelAsteroids.speed = 0
@@ -71,13 +66,26 @@ func game_over():
 	self.player.visible = false
 
 func start():
-	self.player.position = Vector2(72, 134)
+	create_player(self.player1)
+	
+	if Global.players.size() == 2:
+		create_player(self.player2)
+	else:
+		remove_child(self.player2)
+		
 	self.labelLevelAnimation.play(\"fade_in\")
 	self.hud.create(Global.highscore, Global.lives, Global.players.size())
-	self.player.set_invulnerable(3)
+	
+func start_player(player):
+	player.position = Vector2(72, 134)
+	player.set_invulnerable(3)
+	
+func create_player(player):
+	start_player(player)
+	player.add_weapon(Global.WeaponType.WEAPON_RIELGUN)
 
-func _on_Player_on_collision_walls(wall):
-	hit_player()
+func _on_Player_on_collision_walls(player, wall):
+	hit_player(player)
 
 func add_beam(player, amount):
 	var playerId = player - 1
@@ -85,12 +93,14 @@ func add_beam(player, amount):
 	self.hud.set_beam_amount(player, Global.players[playerId].beam)
 
 func _on_LevelAsteroids_on_enemy_collision(enemy, player):
-	hit_player()
+	hit_player(player)
 
 func _on_LevelAsteroids_on_item_collision(item, player):
 	match item.type:
 		Global.ItemType.ITEM_BEAM:
-			add_beam(1, 25)
+			add_beam(player.id, ProjectSettings.get_setting(\"narium/beam/step\"))
+		Global.ItemType.ITEM_MISSILE:
+			player.add_weapon(Global.WeaponType.WEAPON_MISSILE)
 		_:
 			pass
 	
@@ -104,9 +114,9 @@ func create_explosion(type, position):
 	
 	$LevelAsteroids/TileMap.add_child(explosionInstance)
 
-
 func _on_TimerFps_timeout():
-	print(Engine.get_frames_per_second())
+	pass
+	#print(Engine.get_frames_per_second())
 "
 
 [sub_resource type="Environment" id=5]
@@ -157,8 +167,13 @@ texture = ExtResource( 5 )
 
 [node name="LevelAsteroids" parent="." instance=ExtResource( 6 )]
 
-[node name="Player" parent="." instance=ExtResource( 3 )]
+[node name="Player1" parent="." instance=ExtResource( 3 )]
 position = Vector2( 96, 135 )
+id = 1
+
+[node name="Player2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 96, 135 )
+id = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -203,7 +218,8 @@ volume_db = -80.0
 
 [connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
 [connection signal="on_item_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_item_collision"]
-[connection signal="on_collision_walls" from="Player" to="." method="_on_Player_on_collision_walls"]
+[connection signal="on_collision_walls" from="Player1" to="." method="_on_Player_on_collision_walls"]
+[connection signal="on_collision_walls" from="Player2" to="." method="_on_Player_on_collision_walls"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]
 [connection signal="timeout" from="TimerFps" to="." method="_on_TimerFps_timeout"]
