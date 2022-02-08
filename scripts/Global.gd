@@ -3,6 +3,7 @@ extends Node
 const DEVELOPMENT = true
 
 enum ItemType {
+	ITEM_NONE,
 	ITEM_BEAM,
 	ITEM_MISSILE
 }
@@ -10,6 +11,10 @@ enum ItemType {
 enum BulletType {
 	BULLET_RIELGUN,
 	BULLET_MISSILE
+}
+
+enum EnemyBulletType {
+	ENEMY_BULLET_RIELGUN
 }
 
 enum ExplosionType {

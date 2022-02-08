@@ -14,6 +14,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/enemies/asteroids/AsteroidBehavior.gd"
 }, {
+"base": "Area2D",
+"class": "BaseEnemy",
+"language": "GDScript",
+"path": "res://scripts/BaseEnemy.gd"
+}, {
+"base": "Area2D",
+"class": "BaseItem",
+"language": "GDScript",
+"path": "res://scripts/BaseItem.gd"
+}, {
 "base": "Node2D",
 "class": "Explosion",
 "language": "GDScript",
@@ -26,6 +36,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Asteroid": "",
+"BaseEnemy": "",
+"BaseItem": "",
 "Explosion": "",
 "PlayerStats": ""
 }
@@ -112,6 +124,7 @@ add_live={
 2d_physics/layer_3="player"
 2d_physics/layer_4="items"
 2d_physics/layer_5="bullets"
+2d_physics/layer_6="enemy_bullets"
 
 [narium]
 
@@ -120,6 +133,7 @@ scores/medium_asteroid=100
 scores/large_asteroid=100
 beam/step=25
 beam/strength=0
+engine/ai_action=Vector2( 500, 300 )
 
 [physics]
 

@@ -39,9 +39,10 @@ func get_type():
 	return type
 
 func _process(delta):
-	if 480 + 50:
+	if global_position.x <= 480 + 50:
 		rotate(deg2rad(self.rotationSpeed) * delta)
-		self.position += self.velocity.normalized() * self.movementSpeed * delta
+		# Move container
+		get_parent().position += self.velocity.normalized() * self.movementSpeed * delta
 		
 		if global_position.x < -50 or global_position.y < -50 or global_position.y > 270 + 50:
 			queue_free()

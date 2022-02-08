@@ -1,31 +1,75 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/images/enemies/enemy.png" type="Texture" id=1]
+[ext_resource path="res://scenes/AnimationHit.tscn" type="PackedScene" id=2]
 
 [sub_resource type="GDScript" id=3]
-script/source = "extends Area2D
+script/source = "#extends Area2D
+extends BaseEnemy
 
-#var Bullet = preload(\"res://scenes/bullets/Bullet.tscn\")
+#signal on_collision
 
-export(float) var speed = 40.0
+#var Bullet = preload(\"res://scenes/bullets/enemy/BulletEnemy.tscn\")
+
+#export(float) var speed = 40.0
+#export(Vector2) var velocity = Vector2(-1, 0)
 
 onready var timerShot := $TimerShot
+onready var timerSubShot := $TimerSubShot
 onready var animationPlayer := $AnimationPlayer
 
+#var level = null
+#var path = null
+
+var _shots = 0
+
 func _ready():
-	self.timerShot.start(0.5)
+	self.timerShot.start(1)
 	self.animationPlayer.play(\"animation\")
+	
+	#if get_parent() is PathFollow2D:
+	#	self.path = get_parent()
+
+\"\"\"
+func _process(delta):
+	if self.global_position.x <= ProjectSettings.get_setting(\"narium/engine/ai_action\").x:
+		var step = self.speed * delta
+		
+		if self.path:
+			self.path.offset += step
+		else:
+			self.position += self.velocity.normalized() * self.speed * delta
+	
+	# Enemy out of screen
+	if self.global_position.x < -50 or self.global_position.y < -50 or self.global_position.y >= ProjectSettings.get_setting(\"narium/engine/ai_action\").y:
+		queue_free()
+\"\"\"
 
 func _on_TimerShot_timeout():
-	_shoot()
+	self.timerShot.stop()
+	self.timerSubShot.start(0.5)
 
+\"\"\"
 func _shoot():
-	pass
-	#var bullet = Bullet.instance()
-	#bullet.create_as_enemy(self, Global.BulletType.BULLET_RIELGUN)
-	#bullet.velocity = Vector2(-1, 0)
-	#get_parent().get_parent().get_parent().get_parent().add_child(bullet)
+	var bullet = Bullet.instance()
+	bullet.create(self, Global.EnemyBulletType.ENEMY_BULLET_RIELGUN)
+	self.level.add_child(bullet)
+	bullet.connect(\"on_collision\", self.level, \"_on_bullet_collision\")
+\"\"\"
+\"\"\"
+func _on_SentinelEnemy_area_entered(area):
+	if area.get_class() == \"Player\":
+		emit_signal(\"on_collision\", self, area)
+\"\"\"
 
+func _on_TimerSubShot_timeout():
+	shoot(Global.EnemyBulletType.ENEMY_BULLET_RIELGUN, Vector2(-1, 0))
+	self._shots += 1
+	
+	if self._shots == 3:
+		self._shots = 0
+		self.timerShot.start(1.0)
+		self.timerSubShot.stop()
 "
 
 [sub_resource type="CircleShape2D" id=1]
@@ -63,4 +107,9 @@ anims/animation = SubResource( 2 )
 
 [node name="TimerShot" type="Timer" parent="."]
 
+[node name="TimerSubShot" type="Timer" parent="."]
+
+[node name="AnimationHit" parent="." instance=ExtResource( 2 )]
+
 [connection signal="timeout" from="TimerShot" to="." method="_on_TimerShot_timeout"]
+[connection signal="timeout" from="TimerSubShot" to="." method="_on_TimerSubShot_timeout"]

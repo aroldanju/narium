@@ -45,10 +45,23 @@ func _on_Transition_on_fade_in_finish():
 
 func _on_bullet_collision(bullet, body):
 	create_explosion(Global.ExplosionType.EXPLOSION_HIT_YELLOW, bullet.global_position - $LevelAsteroids.position)
+	
+	if body is BaseEnemy:
+		body.hit(1)
+		Global.players[0].score += body.score
+		self.hud.set_score(1, Global.players[0].score)
+		
+	\"\"\"
 	if body.get_class() == \"Asteroid\":
 		if body.get_parent().hit(1):
 			Global.players[0].score += body.score
 			self.hud.set_score(1, Global.players[0].score)
+	else:
+		body.hit(1)
+		Global.players[0].score += body.score
+		self.hud.set_score(1, Global.players[0].score)
+		print(body.get_class())
+	\"\"\"
 
 func hit_player(player):
 	if not player.invulnerable:
@@ -61,7 +74,8 @@ func hit_player(player):
 
 func game_over():
 	$LevelAsteroids.speed = 0
-	self.player.invulnerable = true
+	self.player1.invulnerable = true
+	self.player2.invulnerable = true
 	self.transition.fade_out()
 	self.player.visible = false
 
@@ -106,6 +120,9 @@ func _on_LevelAsteroids_on_item_collision(item, player):
 	
 	item.queue_free()
 
+func _on_LevelAsteroids_on_bullet_collision(bullet, player):
+	hit_player(player)
+
 func create_explosion(type, position):
 	var explosionInstance = Explosion.instance()
 	explosionInstance.set_type(type)
@@ -124,6 +141,7 @@ background_mode = 4
 background_canvas_max_layer = 2
 glow_enabled = true
 glow_blend_mode = 0
+glow_hdr_threshold = 4.0
 glow_hdr_luminance_cap = 115.85
 glow_bicubic_upscale = true
 
@@ -216,6 +234,7 @@ volume_db = -80.0
 
 [node name="TimerFps" type="Timer" parent="."]
 
+[connection signal="on_bullet_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_bullet_collision"]
 [connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
 [connection signal="on_item_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_item_collision"]
 [connection signal="on_collision_walls" from="Player1" to="." method="_on_Player_on_collision_walls"]

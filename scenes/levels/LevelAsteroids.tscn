@@ -1,10 +1,11 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://assets/images/tiles_rock.png" type="Texture" id=1]
 [ext_resource path="res://scenes/enemies/SentinelEnemy.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/enemies/AsteroidEnemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/items/BeamItem.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/PathFollower.gd" type="Script" id=4]
 [ext_resource path="res://scenes/items/Item.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/enemies/AsteroidLargeEnemy.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=17]
 script/source = "extends Node2D
@@ -13,6 +14,7 @@ script/source = "extends Node2D
 
 signal on_enemy_collision
 signal on_item_collision
+signal on_bullet_collision
 
 export(float) var speed = 20.0
 
@@ -28,16 +30,17 @@ func _physics_process(delta):
 	pass
 
 func _create_level():
-	# Connect 'area_entered'
-	for child in self.get_children():
-		match child.get_class():
-			\"Asteroid\":
-				child.connect(\"on_collision\", self, \"_on_enemy_collision\")
-			\"Item\":
-				child.connect(\"on_collision\", self, \"_on_item_collision\")
-			_:
-				pass
-				
+	_connect_children(self)
+
+func _connect_children(parent):
+	for child in parent.get_children():
+		if child is BaseEnemy:
+			child.connect(\"on_collision\", self, \"_on_enemy_collision\")
+			child.level = self
+		elif child is BaseItem:
+			child.connect(\"on_collision\", self, \"_on_item_collision\")
+		else:
+			_connect_children(child)
 
 func _on_enemy_collision(enemy, player):
 	emit_signal(\"on_enemy_collision\", enemy, player)
@@ -45,6 +48,8 @@ func _on_enemy_collision(enemy, player):
 func _on_item_collision(item, player):
 	emit_signal(\"on_item_collision\", item, player)
 
+func _on_bullet_collision(bullet, player):
+	emit_signal(\"on_bullet_collision\", bullet, player)
 "
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
@@ -334,7 +339,7 @@ points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
 
 [sub_resource type="Curve2D" id=32]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 480, 140, 0, 0, 0, 0, 408, 140, 0, 0, 0, 0, 337, 140, 0, 0, 0, 0, 285, 134, 0, 0, 0, 0, 244, 115, 0, 0, 0, 0, 219, 94, 0, 0, 0, 0, 204, 72, 0, 0, 0, 0, 192, 45, 0, 0, 0, 0, 187, 15, 0, 0, 0, 0, 187, -38 )
+"points": PoolVector2Array( 0, 0, 0, 0, 569, 139, 0, 0, 0, 0, 479, 139, 0, 0, 0, 0, 248, 63, 0, 0, 0, 0, -28, 63 )
 }
 
 [node name="LevelAsteroids" type="Node2D"]
@@ -351,13 +356,6 @@ tile_data = PoolIntArray( 0, 0, 131075, 1, 0, 131076, 18, 0, 131072, 19, 0, 1310
 
 [node name="Item" parent="." instance=ExtResource( 5 )]
 position = Vector2( 372, 154 )
-type = 1
-
-[node name="AsteroidEnemy2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 528, 84 )
-rotation = 1.96
-type = 1
-rotationSpeed = 20.0
 
 [node name="Item2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 408, 84 )
@@ -366,12 +364,21 @@ position = Vector2( 408, 84 )
 curve = SubResource( 32 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
-position = Vector2( 480, 140 )
+position = Vector2( 569, 139 )
 rotation = 3.14159
 rotate = false
 cubic_interp = false
 loop = false
 script = ExtResource( 4 )
+speed = 80.0
 
 [node name="SentinelEnemy" parent="Path2D/PathFollow2D" instance=ExtResource( 2 )]
 rotation = 3.14159
+speed = 35.0
+
+[node name="AsteroidEnemy3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 465, 84 )
+rotateSpeed = 10.0
+
+[node name="BeamItem" parent="." instance=ExtResource( 3 )]
+position = Vector2( 311, 122 )

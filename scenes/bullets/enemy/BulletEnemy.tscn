@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/bullets/enemy/RielgunBulletEnemy.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+signal on_collision
+
+func get_class(): return \"EnemyBullet\"
+
+export(Global.EnemyBulletType) var type = Global.EnemyBulletType.ENEMY_BULLET_RIELGUN
+
+var bulletOwner = null
+var velocity = Vector2(-1.0, 0)
+var currentButllet = null
+
+func _ready():
+	pass
+
+func create(entity, type):
+	#print(entity.level.position.x 
+	self.bulletOwner = entity
+	self.position = Vector2(entity.global_position.x - entity.level.position.x, entity.global_position.y - entity.level.position.y)
+	self.type = type
+	_apply_type()
+
+func get_sprite():
+	_get_bullet_node().get_node(\"Sprite\")
+
+func get_collision():
+	_get_bullet_node().get_node(\"CollisionShape2D\")
+
+func _get_bullet_node():
+	match self.type:
+		Global.EnemyBulletType.ENEMY_BULLET_RIELGUN:
+			return get_node_or_null(\"RielgunBulletEnemy\")
+
+func _apply_type():
+	# Remove all bullet children
+	for child in get_children():
+		if not child.name == _get_bullet_node().name:
+			remove_child(child)
+
+func _on_bullet_on_collision_player(bullet, player):
+	emit_signal(\"on_collision\", bullet, player)
+"
+
+[node name="BulletEnemy" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="RielgunBulletEnemy" parent="." instance=ExtResource( 1 )]
+speed = 200.0
+damage = 1.0
+
+[connection signal="on_collision_player" from="RielgunBulletEnemy" to="." method="_on_bullet_on_collision_player"]

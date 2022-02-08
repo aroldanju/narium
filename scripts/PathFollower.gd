@@ -6,5 +6,9 @@ func _ready():
 	pass # Replace with function body.
 
 func _process(delta):
-	set_offset(get_offset() + self.speed * delta)
+	pass
+	"""
+	if global_position.x <= 480 + 50:
+		set_offset(get_offset() + self.speed * delta)
+	"""
 	
