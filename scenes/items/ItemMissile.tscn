@@ -1,7 +1,21 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/images/items/item_missile.png" type="Texture" id=1]
-[ext_resource path="res://scenes/items/Item.gd" type="Script" id=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Area2D
+
+signal on_collision
+
+onready var sprite := $Sprite
+onready var animation := $AnimationPlayer
+
+func _ready():
+	self.animation.play(\"item\")
+
+func _on_ItemBeam_area_entered(area):
+	emit_signal(\"on_collision\", self, area)
+"
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -25,7 +39,7 @@ tracks/0/keys = {
 [node name="ItemMissile" type="Area2D"]
 collision_layer = 8
 collision_mask = 4
-script = ExtResource( 2 )
+script = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
