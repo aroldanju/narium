@@ -40,5 +40,9 @@ func _get_texture_by_explosion_type(type):
 			asset += "explosion_yellow_small.png"
 		Global.ExplosionType.EXPLOSION_HIT_YELLOW:
 			asset += "explosion_hit_yellow.png"
+		Global.ExplosionType.EXPLOSION_FIRE:
+			asset += "explosion_fire.png"
+		Global.ExplosionType.EXPLOSION_FIRE_SMALL:
+			asset += "explosion_fire_small.png"
 	
 	return load(asset)

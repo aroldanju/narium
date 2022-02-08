@@ -11,7 +11,7 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-var Explosion = preload(\"res://scenes/explosions/ExplosionLarge.tscn\")
+var Explosion = preload(\"res://scenes/explosions/Explosion.tscn\")
 
 onready var transition := $CanvasLayer/Control/Transition
 onready var player1 := $Player1
@@ -48,20 +48,6 @@ func _on_bullet_collision(bullet, body):
 	
 	if body is BaseEnemy:
 		body.hit(1)
-		Global.players[0].score += body.score
-		self.hud.set_score(1, Global.players[0].score)
-		
-	\"\"\"
-	if body.get_class() == \"Asteroid\":
-		if body.get_parent().hit(1):
-			Global.players[0].score += body.score
-			self.hud.set_score(1, Global.players[0].score)
-	else:
-		body.hit(1)
-		Global.players[0].score += body.score
-		self.hud.set_score(1, Global.players[0].score)
-		print(body.get_class())
-	\"\"\"
 
 func hit_player(player):
 	if not player.invulnerable:
@@ -134,6 +120,12 @@ func create_explosion(type, position):
 func _on_TimerFps_timeout():
 	pass
 	#print(Engine.get_frames_per_second())
+
+
+func _on_LevelAsteroids_on_enemy_destroy(enemy):
+	create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, enemy.global_position - $LevelAsteroids.position)
+	Global.players[0].score += enemy.score
+	self.hud.set_score(1, Global.players[0].score)
 "
 
 [sub_resource type="Environment" id=5]
@@ -236,6 +228,7 @@ volume_db = -80.0
 
 [connection signal="on_bullet_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_bullet_collision"]
 [connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
+[connection signal="on_enemy_destroy" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_destroy"]
 [connection signal="on_item_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_item_collision"]
 [connection signal="on_collision_walls" from="Player1" to="." method="_on_Player_on_collision_walls"]
 [connection signal="on_collision_walls" from="Player2" to="." method="_on_Player_on_collision_walls"]

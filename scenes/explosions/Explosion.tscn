@@ -1,0 +1,103 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/images/explosions/explosion_yellow_large.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=2]
+script/source = "tool
+
+extends Node2D
+
+#class_name Explosion
+
+onready var animation := $ExplosionAnimation
+onready var audio := $AudioStreamPlayer
+
+export(Global.ExplosionType) var type = Global.ExplosionType.EXPLOSION_YELLOW_LARGE setget set_type, get_type
+
+func _ready():
+	pass
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	queue_free()
+
+func set_type(t):
+	type = t
+	_create_explosion()
+
+func get_type():
+	return type
+
+func explode():
+	get_node(\"ExplosionAnimation\").play(\"explode\")
+	get_node(\"AudioStreamPlayer\").play()
+
+func _create_explosion():
+	var sprite = get_node(\"Sprite\")
+	sprite.texture = _get_texture_by_explosion_type(self.type)
+	
+	var audio = get_node(\"AudioStreamPlayer\")
+	var audioStream = _get_sound_by_explosion_type(self.type)
+	if audioStream:
+		audio.stream = audioStream
+
+func _get_texture_by_explosion_type(type):
+	var asset = \"res://assets/images/explosions/\"
+	
+	match type:
+		Global.ExplosionType.EXPLOSION_YELLOW_LARGE:
+			asset += \"explosion_yellow_large.png\"
+		Global.ExplosionType.EXPLOSION_YELLOW_MEDIUM:
+			asset += \"explosion_yellow_medium.png\"
+		Global.ExplosionType.EXPLOSION_YELLOW_SMALL:
+			asset += \"explosion_yellow_small.png\"
+		Global.ExplosionType.EXPLOSION_HIT_YELLOW:
+			asset += \"explosion_hit_yellow.png\"
+		Global.ExplosionType.EXPLOSION_FIRE:
+			asset += \"explosion_fire.png\"
+		Global.ExplosionType.EXPLOSION_FIRE_SMALL:
+			asset += \"explosion_fire_small.png\"
+	
+	return load(asset)
+
+func _get_sound_by_explosion_type(type):
+	var asset = \"res://assets/sounds/explosions/\"
+	
+	match type:
+		Global.ExplosionType.EXPLOSION_YELLOW_LARGE:
+			asset += \"laser1_2.mp3\"
+		_:
+			return null
+	
+	return load(asset)
+"
+
+[sub_resource type="Animation" id=1]
+resource_name = "explode"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 3.4822, 1 ),
+"update": 0,
+"values": [ 0, 6 ]
+}
+
+[node name="Explosion" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 7
+
+[node name="ExplosionAnimation" type="AnimationPlayer" parent="."]
+playback_speed = 2.0
+anims/explode = SubResource( 1 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[connection signal="animation_finished" from="ExplosionAnimation" to="." method="_on_AnimationPlayer_animation_finished"]

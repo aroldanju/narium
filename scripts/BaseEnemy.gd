@@ -19,6 +19,7 @@ export(int) var strength = 5
 onready var sprite := $Sprite
 #onready var collision := $CollisionPolygon2D
 onready var animationHit := $AnimationHit
+onready var destroyAudio := $DestroyAudio
 
 var level = null
 var path = null
@@ -63,5 +64,6 @@ func hit(damage):
 	emit_signal("on_damage", self, damage)
 	
 	if self.strength <= 0:
+		#self.destroyAudio.play()
 		queue_free()
 		emit_signal("on_destroy", self)

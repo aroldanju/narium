@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/rielgun.mp3-23508198c269ba17e30d3b08a24c56c0.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/shot/rielgun.mp3"
+dest_files=[ "res://.import/rielgun.mp3-23508198c269ba17e30d3b08a24c56c0.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0
