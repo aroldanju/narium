@@ -22,6 +22,7 @@ onready var tileMap := $TileMap
 
 func _ready():
 	_create_level()
+	Global.playMusic(\"res://assets/music/PetterTheSturgeon - Anything_1.waw_.mp3\")
 
 func _process(delta):
 	self.position.x -= self.speed * delta

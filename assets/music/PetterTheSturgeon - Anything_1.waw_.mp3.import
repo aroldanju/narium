@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-b6b4024039e7dd0c5696608e2066eab1.mp3str"
+
+[deps]
+
+source_file="res://assets/music/PetterTheSturgeon - Anything_1.waw_.mp3"
+dest_files=[ "res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-b6b4024039e7dd0c5696608e2066eab1.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

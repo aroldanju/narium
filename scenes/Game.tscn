@@ -227,7 +227,7 @@ anims/fade_in = SubResource( 4 )
 
 [node name="AudioMission" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
-volume_db = -80.0
+volume_db = -27.54
 
 [node name="TimerFps" type="Timer" parent="."]
 

@@ -45,3 +45,13 @@ func start(players):
 	self.players = Array()
 	for i in range(players):
 		self.players.append(PlayerStats.new())
+
+var musicAudio = AudioStreamPlayer.new()
+
+func playMusic(stream):
+	self.musicAudio.stream = load(stream)
+	self.musicAudio.play()
+	add_child(self.musicAudio)
+
+func stopMusic():
+	self.musicAudio.stop()
