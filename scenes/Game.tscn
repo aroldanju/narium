@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/Transition.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Hud.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/images/background_level_01.png" type="Texture" id=5]
 [ext_resource path="res://scenes/levels/LevelAsteroids.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/sounds/mission_start.mp3" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/item.mp3" type="AudioStream" id=8]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -21,6 +22,7 @@ onready var labelLevelAnimation := $CanvasLayer/Control/LabelLevel/AnimationPlay
 onready var hud := $CanvasLayer/Control/Hud
 onready var audioMission := $AudioMission
 onready var timerFps := $TimerFps
+onready var audioItem := $AudioItem
 
 func _ready():
 	#self.transition.fade_in()
@@ -96,6 +98,9 @@ func _on_LevelAsteroids_on_enemy_collision(enemy, player):
 	hit_player(player)
 
 func _on_LevelAsteroids_on_item_collision(item, player):
+	
+	self.audioItem.play()
+	
 	match item.type:
 		Global.ItemType.ITEM_BEAM:
 			add_beam(player.id, ProjectSettings.get_setting(\"narium/beam/step\"))
@@ -225,6 +230,9 @@ stream = ExtResource( 7 )
 volume_db = -80.0
 
 [node name="TimerFps" type="Timer" parent="."]
+
+[node name="AudioItem" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
 
 [connection signal="on_bullet_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_bullet_collision"]
 [connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
