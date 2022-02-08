@@ -47,14 +47,6 @@ func _read_input():
 				self._velocity.y += 1
 			if Input.is_action_pressed(\"1up_fire\"):
 				shot()
-				\"\"\"
-				var bullet = Bullet.instance()
-				bullet.create(self, Global.BulletType.BULLET_RIELGUN)
-				if bullet.can_fire(self._lastShot):
-					get_parent().add_child(bullet)
-					bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
-					self._lastShot = OS.get_ticks_msec()
-				\"\"\"
 		2:
 			if Input.is_action_pressed(\"2up_left\"):
 				self._velocity.x += -1
@@ -66,14 +58,6 @@ func _read_input():
 				self._velocity.y += 1
 			if Input.is_action_pressed(\"2up_fire\"):
 				shot()
-				\"\"\"
-				var bullet = Bullet.instance()
-				bullet.create(self, Global.BulletType.BULLET_RIELGUN)
-				if bullet.can_fire(self._lastShot):
-					get_parent().add_child(bullet)
-					bullet.connect(\"on_collision\", get_parent(), \"_on_bullet_collision\")
-					self._lastShot = OS.get_ticks_msec()
-				\"\"\"
 	
 	self._velocity = self._velocity.normalized() * self.speed
 
@@ -136,7 +120,7 @@ func _create_bullet_by_weapon(weapon):
 		Global.WeaponType.WEAPON_MISSILE:
 			bulletType = Global.BulletType.BULLET_MISSILE
 		Global.WeaponType.WEAPON_RIELGUN:
-			bulletType = Global.BulletType.BULLET_RIELGUN
+			bulletType = Global.BulletType.BULLET_STAR
 		_:
 			return null
 	

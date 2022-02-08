@@ -8,6 +8,7 @@ func get_class(): return "Bullet"
 export(float) var speed = 300.0
 export(Vector2) var velocity = Vector2(0, 0)
 export(float) var rateOfFire = 50.0
+export(float) var damage = 1.0
 
 func _ready():
 	pass

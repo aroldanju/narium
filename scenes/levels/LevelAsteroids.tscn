@@ -383,5 +383,5 @@ rotateSpeed = 10.0
 [node name="BeamItem" parent="." instance=ExtResource( 3 )]
 position = Vector2( 311, 122 )
 
-[node name="BeamItem2" parent="." instance=ExtResource( 5 )]
+[node name="MissileItem" parent="." instance=ExtResource( 5 )]
 position = Vector2( 220, 140 )

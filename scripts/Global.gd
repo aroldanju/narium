@@ -10,7 +10,8 @@ enum ItemType {
 
 enum BulletType {
 	BULLET_RIELGUN,
-	BULLET_MISSILE
+	BULLET_MISSILE,
+	BULLET_STAR
 }
 
 enum EnemyBulletType {
