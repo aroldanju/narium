@@ -1,11 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://assets/images/explosions/explosion_yellow_large.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/explosions/explosion_fire_small.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=2]
-script/source = "tool
-
-extends Node2D
+script/source = "extends Node2D
 
 #class_name Explosion
 
@@ -59,6 +57,8 @@ func _get_texture_by_explosion_type(type):
 			asset += \"explosion_fire.png\"
 		Global.ExplosionType.EXPLOSION_FIRE_SMALL:
 			asset += \"explosion_fire_small.png\"
+		Global.ExplosionType.EXPLOSION_WAVE:
+			asset += \"explosion_wave.png\"
 	
 	return load(asset)
 
@@ -92,6 +92,7 @@ tracks/0/keys = {
 
 [node name="Explosion" type="Node2D"]
 script = SubResource( 2 )
+type = 5
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

@@ -12,7 +12,9 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-var Explosion = preload(\"res://scenes/explosions/Explosion.tscn\")
+var HitExplosion = preload(\"res://scenes/explosions/HitExplosion.tscn\")
+var LargeYellowExplosion = preload(\"res://scenes/explosions/LargeYellowExplosion.tscn\")
+var WaveExplosion = preload(\"res://scenes/explosions/WaveExplosion.tscn\")
 
 onready var transition := $CanvasLayer/Control/Transition
 onready var player1 := $Player1
@@ -23,6 +25,9 @@ onready var hud := $CanvasLayer/Control/Hud
 onready var audioMission := $AudioMission
 onready var timerFps := $TimerFps
 onready var audioItem := $AudioItem
+onready var timerShake := $TimerShake
+
+var shake = [false, 1]
 
 func _ready():
 	#self.transition.fade_in()
@@ -38,6 +43,12 @@ func _process(delta):
 		if Global.DEVELOPMENT:
 			Global.lives += 1
 			self.hud.set_lives(Global.lives)
+			
+			shake(1, 2.0)
+	
+	if shake[0]:
+		print(\"shaking\")
+		self.player1.camera.set_offset(Vector2(rand_range(-1, 1) * self.shake[1], rand_range(-1, 1) * self.shake[1]))
 
 func _on_Transition_on_fade_out_finish():
 	get_tree().change_scene(\"res://scenes/Continue.tscn\")
@@ -46,7 +57,7 @@ func _on_Transition_on_fade_in_finish():
 	start()
 
 func _on_bullet_collision(bullet, body):
-	create_explosion(Global.ExplosionType.EXPLOSION_HIT_YELLOW, bullet.global_position - $LevelAsteroids.position)
+	create_explosion(HitExplosion, bullet.global_position - $LevelAsteroids.position)
 	
 	if body is BaseEnemy:
 		body.hit(bullet.damage)
@@ -55,7 +66,8 @@ func hit_player(player):
 	if not player.invulnerable:
 		Global.lives -= 1
 		self.hud.set_lives(Global.lives)
-		create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, player.global_position - $LevelAsteroids.position)
+		create_explosion(WaveExplosion, player.global_position - $LevelAsteroids.position)
+		create_explosion(LargeYellowExplosion, player.global_position - $LevelAsteroids.position)
 		if Global.lives == -1:
 			game_over()
 		else:
@@ -117,19 +129,27 @@ func _on_LevelAsteroids_on_bullet_collision(bullet, player):
 	hit_player(player)
 
 func create_explosion(type, position):
+	var explosion = type.instance()
+	explosion.position = position
+	explosion.explode()
+	$LevelAsteroids.add_child(explosion)
+	
+	\"\"\"
+	var Explosion = preload(\"res://scenes/explosions/Explosion.tscn\")
 	var explosionInstance = Explosion.instance()
 	explosionInstance.set_type(type)
 	explosionInstance.position = position
 	explosionInstance.explode()
 	
 	$LevelAsteroids.add_child(explosionInstance)
+	\"\"\"
 
 func _on_TimerFps_timeout():
 	pass
-	#print(Engine.get_frames_per_second())
+	print(Engine.get_frames_per_second())
 
 func _on_LevelAsteroids_on_enemy_destroy(enemy):
-	create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, enemy.global_position - $LevelAsteroids.position)
+	create_explosion(LargeYellowExplosion, enemy.global_position - $LevelAsteroids.position)
 	Global.players[0].score += enemy.score
 	self.hud.set_score(1, Global.players[0].score)
 
@@ -140,7 +160,12 @@ func _on_Player2_on_restart():
 	start_player(self.player2)
 
 func shake(strength, time):
-	pass
+	self.shake[0] = true
+	self.shake[1] = strength
+	self.timerShake.start(time)
+
+func _on_TimerShake_timeout():
+	self.shake[0] = false
 "
 
 [sub_resource type="Environment" id=5]
@@ -244,6 +269,8 @@ volume_db = -27.54
 [node name="AudioItem" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
 
+[node name="TimerShake" type="Timer" parent="."]
+
 [connection signal="on_bullet_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_bullet_collision"]
 [connection signal="on_enemy_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_collision"]
 [connection signal="on_enemy_destroy" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_destroy"]
@@ -255,3 +282,4 @@ stream = ExtResource( 8 )
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]
 [connection signal="timeout" from="TimerFps" to="." method="_on_TimerFps_timeout"]
+[connection signal="timeout" from="TimerShake" to="." method="_on_TimerShake_timeout"]

@@ -5,7 +5,7 @@
 [ext_resource path="res://scenes/items/BeamItem.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/PathFollower.gd" type="Script" id=4]
 [ext_resource path="res://scenes/items/MissileItem.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/enemies/AsteroidLargeEnemy.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/enemies/AsteroidSmallEnemy.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=17]
 script/source = "extends Node2D
@@ -370,7 +370,7 @@ points = PoolVector2Array( 24, 28, 0, 28, 0, 0, 24, 0 )
 
 [sub_resource type="Curve2D" id=32]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 569, 139, 0, 0, 0, 0, 479, 139, 0, 0, 0, 0, 248, 63, 0, 0, 0, 0, -28, 63 )
+"points": PoolVector2Array( 0, 0, 0, 0, 569, 139, 0, 0, 0, 0, 479, 139, 0, 0, 0, 0, 429, 131, 0, 0, 0, 0, 318, 99, 0, 0, 0, 0, 248, 63, 0, 0, 0, 0, 183, 63 )
 }
 
 [node name="LevelAsteroids" type="Node2D"]
@@ -393,10 +393,27 @@ collision_mask = 20
 format = 1
 tile_data = PoolIntArray( 0, 0, 131075, 1, 0, 131076, 18, 0, 131072, 19, 0, 131073, 20, 0, 131075, 21, 0, 131076, 38, 0, 131072, 39, 0, 131073, 40, 0, 131075, 41, 0, 131076, 58, 0, 131072, 59, 0, 131073, 60, 0, 131075, 61, 0, 131076, 78, 0, 131072, 79, 0, 131073, 80, 0, 131075, 81, 0, 131076, 98, 0, 131072, 99, 0, 131073, 100, 0, 131075, 101, 0, 131076, 118, 0, 131072, 119, 0, 131073, 120, 0, 131075, 121, 0, 131076, 133, 0, 131072, 134, 0, 131073, 135, 0, 196613, 136, 0, 196614, 137, 0, 65538, 138, 0, 65538, 139, 0, 65538, 65671, 0, 65536, 65672, 0, 65537, 65673, 0, 65538, 65674, 0, 65538, 65675, 0, 65538, 131207, 0, 131072, 131208, 0, 131073, 131209, 0, 131074, 131210, 0, 131074, 131211, 0, 196613, 196747, 0, 65536, 262283, 0, 65536, 327819, 0, 65536, 393355, 0, 65536, 458888, 0, 0, 458889, 0, 1, 458890, 0, 2, 458891, 0, 131077, 524420, 0, 0, 524421, 0, 1, 524422, 0, 2, 524423, 0, 2, 524424, 0, 131077, 524425, 0, 131078, 524426, 0, 65538, 524427, 0, 65538, 589824, 0, 3, 589825, 0, 4, 589842, 0, 0, 589843, 0, 1, 589844, 0, 3, 589845, 0, 4, 589862, 0, 0, 589863, 0, 1, 589864, 0, 3, 589865, 0, 4, 589882, 0, 0, 589883, 0, 1, 589884, 0, 3, 589885, 0, 4, 589902, 0, 0, 589903, 0, 1, 589904, 0, 3, 589905, 0, 4, 589922, 0, 0, 589923, 0, 1, 589924, 0, 3, 589925, 0, 4, 589942, 0, 0, 589943, 0, 1, 589944, 0, 3, 589945, 0, 4, 589953, 0, 0, 589954, 0, 1, 589955, 0, 2, 589956, 0, 131077, 589957, 0, 65537, 589958, 0, 65538, 589959, 0, 65538, 589960, 0, 65538, 589961, 0, 65538, 589962, 0, 65538, 589963, 0, 65538 )
 
-[node name="Path2D" type="Path2D" parent="."]
+[node name="BeamItem" parent="." instance=ExtResource( 3 )]
+position = Vector2( 311, 122 )
+
+[node name="MissileItem" parent="." instance=ExtResource( 5 )]
+position = Vector2( 220, 140 )
+
+[node name="Asteroids" type="Node2D" parent="."]
+
+[node name="AsteroidSmallEnemy" parent="Asteroids" instance=ExtResource( 6 )]
+position = Vector2( 311.557, 60.497 )
+speed = 20.0
+velocity = Vector2( -1, 0.1 )
+
+[node name="Waves" type="Node2D" parent="."]
+
+[node name="Wave1" type="Node2D" parent="Waves"]
+
+[node name="Path2D" type="Path2D" parent="Waves/Wave1"]
 curve = SubResource( 32 )
 
-[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+[node name="PathFollow2D" type="PathFollow2D" parent="Waves/Wave1/Path2D"]
 position = Vector2( 569, 139 )
 rotation = 3.14159
 rotate = false
@@ -405,16 +422,40 @@ loop = false
 script = ExtResource( 4 )
 speed = 80.0
 
-[node name="SentinelEnemy" parent="Path2D/PathFollow2D" instance=ExtResource( 2 )]
+[node name="SentinelEnemy" parent="Waves/Wave1/Path2D/PathFollow2D" instance=ExtResource( 2 )]
 rotation = 3.14159
-speed = 35.0
+speed = 60.0
 
-[node name="AsteroidEnemy3" parent="." instance=ExtResource( 6 )]
-position = Vector2( 465, 84 )
-rotateSpeed = 10.0
+[node name="Path2D2" type="Path2D" parent="Waves/Wave1"]
+position = Vector2( 15, 0 )
+curve = SubResource( 32 )
 
-[node name="BeamItem" parent="." instance=ExtResource( 3 )]
-position = Vector2( 311, 122 )
+[node name="PathFollow2D" type="PathFollow2D" parent="Waves/Wave1/Path2D2"]
+position = Vector2( 569, 139 )
+rotation = 3.14159
+rotate = false
+cubic_interp = false
+loop = false
+script = ExtResource( 4 )
+speed = 80.0
 
-[node name="MissileItem" parent="." instance=ExtResource( 5 )]
-position = Vector2( 220, 140 )
+[node name="SentinelEnemy" parent="Waves/Wave1/Path2D2/PathFollow2D" instance=ExtResource( 2 )]
+rotation = 3.14159
+speed = 60.0
+
+[node name="Path2D3" type="Path2D" parent="Waves/Wave1"]
+position = Vector2( 30, 0 )
+curve = SubResource( 32 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Waves/Wave1/Path2D3"]
+position = Vector2( 569, 139 )
+rotation = 3.14159
+rotate = false
+cubic_interp = false
+loop = false
+script = ExtResource( 4 )
+speed = 80.0
+
+[node name="SentinelEnemy" parent="Waves/Wave1/Path2D3/PathFollow2D" instance=ExtResource( 2 )]
+rotation = 3.14159
+speed = 60.0

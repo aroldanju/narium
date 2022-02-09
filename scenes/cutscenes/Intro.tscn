@@ -29,6 +29,8 @@ func _ready():
 	self.animationSkip.play(\"blink\")
 	self.transition.fade_in()
 	self.animationIntro.play(\"history\")
+	
+	Global.playMusic(\"res://assets/music/sci-fi_theme.mp3\")
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	_start_intro_tween()

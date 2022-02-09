@@ -1,5 +1,6 @@
 extends Node
 
+const DEBUG = true
 const DEVELOPMENT = true
 
 enum ItemType {
@@ -24,7 +25,8 @@ enum ExplosionType {
 	EXPLOSION_YELLOW_SMALL,
 	EXPLOSION_HIT_YELLOW,
 	EXPLOSION_FIRE,
-	EXPLOSION_FIRE_SMALL
+	EXPLOSION_FIRE_SMALL,
+	EXPLOSION_WAVE
 }
 
 enum AsteroidType {
@@ -49,10 +51,13 @@ func start(players):
 
 var musicAudio = AudioStreamPlayer.new()
 
+func _ready():
+	self.musicAudio.volume_db = -10.0
+	add_child(self.musicAudio)
+
 func playMusic(stream):
 	self.musicAudio.stream = load(stream)
 	self.musicAudio.play()
-	add_child(self.musicAudio)
 
 func stopMusic():
 	self.musicAudio.stop()
