@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/sci-fi_theme.mp3-08fcf810d47b63cd3eff8793857c5456.mp3str"
+path="res://.import/sci-fi_theme.mp3-678aed34c512b316de43b8a0f7bcdf01.mp3str"
 
 [deps]
 
-source_file="res://assets/music/sci-fi_theme.mp3"
-dest_files=[ "res://.import/sci-fi_theme.mp3-08fcf810d47b63cd3eff8793857c5456.mp3str" ]
+source_file="res://Assets/music/sci-fi_theme.mp3"
+dest_files=[ "res://.import/sci-fi_theme.mp3-678aed34c512b316de43b8a0f7bcdf01.mp3str" ]
 
 [params]
 

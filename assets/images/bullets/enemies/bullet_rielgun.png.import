@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bullet_rielgun.png-b183058abb7dc3b6cc2b74b841d4098b.stex"
+path="res://.import/bullet_rielgun.png-c32a977f5fd57b468f8851ea088375b3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/bullets/enemies/bullet_rielgun.png"
-dest_files=[ "res://.import/bullet_rielgun.png-b183058abb7dc3b6cc2b74b841d4098b.stex" ]
+source_file="res://Assets/Images/bullets/enemies/bullet_rielgun.png"
+dest_files=[ "res://.import/bullet_rielgun.png-c32a977f5fd57b468f8851ea088375b3.stex" ]
 
 [params]
 

@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-b6b4024039e7dd0c5696608e2066eab1.mp3str"
+path="res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-1f866a6861bf5861e76fa1cf15e596e0.mp3str"
 
 [deps]
 
-source_file="res://assets/music/PetterTheSturgeon - Anything_1.waw_.mp3"
-dest_files=[ "res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-b6b4024039e7dd0c5696608e2066eab1.mp3str" ]
+source_file="res://Assets/music/PetterTheSturgeon - Anything_1.waw_.mp3"
+dest_files=[ "res://.import/PetterTheSturgeon - Anything_1.waw_.mp3-1f866a6861bf5861e76fa1cf15e596e0.mp3str" ]
 
 [params]
 

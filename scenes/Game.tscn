@@ -49,7 +49,6 @@ func _on_bullet_collision(bullet, body):
 	create_explosion(Global.ExplosionType.EXPLOSION_HIT_YELLOW, bullet.global_position - $LevelAsteroids.position)
 	
 	if body is BaseEnemy:
-		print(bullet.damage)
 		body.hit(bullet.damage)
 
 func hit_player(player):
@@ -59,14 +58,15 @@ func hit_player(player):
 		if Global.lives == -1:
 			game_over()
 		else:
-			start_player(player)
+			player.destroy()
 
 func game_over():
 	$LevelAsteroids.speed = 0
 	self.player1.invulnerable = true
 	self.player2.invulnerable = true
 	self.transition.fade_out()
-	self.player.visible = false
+	self.player1.visible = false
+	self.player2.visible = false
 
 func start():
 	create_player(self.player1)
@@ -127,11 +127,16 @@ func _on_TimerFps_timeout():
 	pass
 	#print(Engine.get_frames_per_second())
 
-
 func _on_LevelAsteroids_on_enemy_destroy(enemy):
 	create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, enemy.global_position - $LevelAsteroids.position)
 	Global.players[0].score += enemy.score
 	self.hud.set_score(1, Global.players[0].score)
+
+func _on_Player1_on_restart():
+	start_player(self.player1)
+
+func _on_Player2_on_restart():
+	start_player(self.player2)
 "
 
 [sub_resource type="Environment" id=5]
@@ -240,7 +245,9 @@ stream = ExtResource( 8 )
 [connection signal="on_enemy_destroy" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_enemy_destroy"]
 [connection signal="on_item_collision" from="LevelAsteroids" to="." method="_on_LevelAsteroids_on_item_collision"]
 [connection signal="on_collision_walls" from="Player1" to="." method="_on_Player_on_collision_walls"]
+[connection signal="on_restart" from="Player1" to="." method="_on_Player1_on_restart"]
 [connection signal="on_collision_walls" from="Player2" to="." method="_on_Player_on_collision_walls"]
+[connection signal="on_restart" from="Player2" to="." method="_on_Player2_on_restart"]
 [connection signal="on_fade_in_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_in_finish"]
 [connection signal="on_fade_out_finish" from="CanvasLayer/Control/Transition" to="." method="_on_Transition_on_fade_out_finish"]
 [connection signal="timeout" from="TimerFps" to="." method="_on_TimerFps_timeout"]
