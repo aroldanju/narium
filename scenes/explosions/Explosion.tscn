@@ -39,6 +39,9 @@ func _create_explosion():
 	var audioStream = _get_sound_by_explosion_type(self.type)
 	if audioStream:
 		audio.stream = audioStream
+	
+	# Rotate explosion?
+	#sprite.rotate(deg2rad(randi() % 360))
 
 func _get_texture_by_explosion_type(type):
 	var asset = \"res://assets/images/explosions/\"

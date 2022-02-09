@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/laser1.mp3-b6f6f3f6c05acfb54dfea6ae1ba05ecf.mp3str"
+path="res://.import/laser1.mp3-db355b75fbb0a2a40e9ebba9b5e99743.mp3str"
 
 [deps]
 
-source_file="res://Assets/sounds/explosions/laser1.mp3"
-dest_files=[ "res://.import/laser1.mp3-b6f6f3f6c05acfb54dfea6ae1ba05ecf.mp3str" ]
+source_file="res://assets/sounds/explosions/laser1.mp3"
+dest_files=[ "res://.import/laser1.mp3-db355b75fbb0a2a40e9ebba9b5e99743.mp3str" ]
 
 [params]
 

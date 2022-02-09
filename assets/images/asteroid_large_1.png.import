@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/asteroid_large_1.png-f9636d48ad3fa8a833e3d621f7513aef.stex"
+path="res://.import/asteroid_large_1.png-dbf69840be48d74f566f0c2d948cd097.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/asteroid_large_1.png"
-dest_files=[ "res://.import/asteroid_large_1.png-f9636d48ad3fa8a833e3d621f7513aef.stex" ]
+source_file="res://assets/images/asteroid_large_1.png"
+dest_files=[ "res://.import/asteroid_large_1.png-dbf69840be48d74f566f0c2d948cd097.stex" ]
 
 [params]
 

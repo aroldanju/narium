@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/rielgun.mp3-76f77cfa46cd1424fede36af3eced26d.mp3str"
+path="res://.import/rielgun.mp3-23508198c269ba17e30d3b08a24c56c0.mp3str"
 
 [deps]
 
-source_file="res://Assets/sounds/shot/rielgun.mp3"
-dest_files=[ "res://.import/rielgun.mp3-76f77cfa46cd1424fede36af3eced26d.mp3str" ]
+source_file="res://assets/sounds/shot/rielgun.mp3"
+dest_files=[ "res://.import/rielgun.mp3-23508198c269ba17e30d3b08a24c56c0.mp3str" ]
 
 [params]
 

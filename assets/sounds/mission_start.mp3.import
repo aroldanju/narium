@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/mission_start.mp3-75bae1850eb55932b85598b11001cf97.mp3str"
+path="res://.import/mission_start.mp3-24c0dfa18434833c27e3cdb00e931cb2.mp3str"
 
 [deps]
 
-source_file="res://Assets/sounds/mission_start.mp3"
-dest_files=[ "res://.import/mission_start.mp3-75bae1850eb55932b85598b11001cf97.mp3str" ]
+source_file="res://assets/sounds/mission_start.mp3"
+dest_files=[ "res://.import/mission_start.mp3-24c0dfa18434833c27e3cdb00e931cb2.mp3str" ]
 
 [params]
 

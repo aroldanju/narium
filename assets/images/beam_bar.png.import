@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/beam_bar.png-2b978f1d6c7a0a65a2fb40697d952e5e.stex"
+path="res://.import/beam_bar.png-5b7906a698c88fb2db0467b3c22bb764.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/beam_bar.png"
-dest_files=[ "res://.import/beam_bar.png-2b978f1d6c7a0a65a2fb40697d952e5e.stex" ]
+source_file="res://assets/images/beam_bar.png"
+dest_files=[ "res://.import/beam_bar.png-5b7906a698c88fb2db0467b3c22bb764.stex" ]
 
 [params]
 

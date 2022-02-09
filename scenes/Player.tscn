@@ -63,23 +63,22 @@ func _read_input():
 	
 	self._velocity = self._velocity.normalized() * self.speed
 
-func _process(delta):
-	pass
-
 func _physics_process(delta):
-	_read_input()
 	
-	if self._velocity.x != 0 or self._velocity.y != 0:
-		var lastPosition = self.position
-		self.position += self._velocity * delta
-		if self.position.x >= get_viewport().size.x or self.position.x < 0 or self.position.y < 0 or self.position.y >= get_viewport().size.y:
-			self.position = lastPosition
-	
-	for collider in get_overlapping_bodies():
-		if collider.collision_layer == 1:
-			if not self.invulnerable:
-				if collider.collision_layer == 1:
-					emit_signal(\"on_collision_walls\", self, collider)
+	if self.timerRestart.is_stopped():
+		_read_input()
+		
+		if self._velocity.x != 0 or self._velocity.y != 0:
+			var lastPosition = self.position
+			self.position += self._velocity * delta
+			if self.position.x >= get_viewport().size.x or self.position.x < 0 or self.position.y < 0 or self.position.y >= get_viewport().size.y:
+				self.position = lastPosition
+		
+		for collider in get_overlapping_bodies():
+			if collider.collision_layer == 1:
+				if not self.invulnerable:
+					if collider.collision_layer == 1:
+						emit_signal(\"on_collision_walls\", self, collider)
 
 func set_invulnerable(seconds):
 	self.timerInvulnerable.start(seconds)
