@@ -54,6 +54,7 @@ func _on_bullet_collision(bullet, body):
 func hit_player(player):
 	if not player.invulnerable:
 		Global.lives -= 1
+		self.hud.set_lives(Global.lives)
 		create_explosion(Global.ExplosionType.EXPLOSION_YELLOW_LARGE, player.global_position - $LevelAsteroids.position)
 		if Global.lives == -1:
 			game_over()
