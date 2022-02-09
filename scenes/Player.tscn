@@ -121,7 +121,7 @@ func _create_bullet_by_weapon(weapon):
 		Global.WeaponType.WEAPON_MISSILE:
 			bulletType = Global.BulletType.BULLET_MISSILE
 		Global.WeaponType.WEAPON_RIELGUN:
-			bulletType = Global.BulletType.BULLET_STAR
+			bulletType = Global.BulletType.BULLET_RIELGUN
 		_:
 			return null
 	

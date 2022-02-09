@@ -138,6 +138,9 @@ func _on_Player1_on_restart():
 
 func _on_Player2_on_restart():
 	start_player(self.player2)
+
+func shake(strength, time):
+	pass
 "
 
 [sub_resource type="Environment" id=5]
