@@ -402,9 +402,24 @@ position = Vector2( 220, 140 )
 [node name="Asteroids" type="Node2D" parent="."]
 
 [node name="AsteroidSmallEnemy" parent="Asteroids" instance=ExtResource( 6 )]
-position = Vector2( 311.557, 60.497 )
+position = Vector2( 584, 12 )
 speed = 20.0
-velocity = Vector2( -1, 0.1 )
+velocity = Vector2( -1, 2.705 )
+
+[node name="AsteroidSmallEnemy2" parent="Asteroids" instance=ExtResource( 6 )]
+position = Vector2( 615, 240 )
+speed = 30.0
+velocity = Vector2( -0.295, -1.847 )
+
+[node name="AsteroidSmallEnemy3" parent="Asteroids" instance=ExtResource( 6 )]
+position = Vector2( 699, 85 )
+speed = 30.0
+velocity = Vector2( -1.137, -0.147 )
+
+[node name="AsteroidSmallEnemy4" parent="Asteroids" instance=ExtResource( 6 )]
+position = Vector2( 684, 179 )
+speed = 30.0
+velocity = Vector2( -1.137, -0.147 )
 
 [node name="Waves" type="Node2D" parent="."]
 

@@ -193,7 +193,7 @@ anims/default = SubResource( 3 )
 rotation = 1.5708
 shape = SubResource( 2 )
 
-[node name="Camera_" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="."]
 limit_left = 0
 limit_top = 0
 limit_right = 480
@@ -211,9 +211,6 @@ stream = ExtResource( 3 )
 
 [node name="TimerRestart" type="Timer" parent="."]
 one_shot = true
-
-[node name="Camera" type="Camera2D" parent="."]
-current = true
 
 [connection signal="timeout" from="TimerInvulnerable" to="." method="_on_TimerInvulnerable_timeout"]
 [connection signal="timeout" from="TimerRestart" to="." method="_on_TimerRestart_timeout"]
